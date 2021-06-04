@@ -1,0 +1,42 @@
+name: Code Formatter
+
+on: push
+
+jobs:
+  YAPF:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+      - name: Install requirements
+        run: pip install autoflake yapf isort["pyproject"] toml black autopep8
+      - name: Check for showstoppers
+        run: >-
+          autopep8 --verbose --in-place --recursive --aggressive --aggressive
+          --ignore=W605 .
+      - name: Remove unused imports and variables
+        run: >-
+          autoflake --in-place --recursive --remove-all-unused-imports
+          --remove-unused-variables --ignore-init-module-imports .
+      - name: linting with isort and yapf
+        run: |
+          black .
+          isort .
+          yapf --style='{based_on_style: google, spaces_before_comment: 2, split_before_logical_operator: true, column_limit=88}' -ir .
+      - name: Check lock file
+        run: |
+          if ! [[ -f "poetry.lock" ]]; then
+              pip install poetry
+              poetry install
+          fi
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "auto: code format"
+          commit_options: "--no-verify"
+          repository: .
+          commit_user_name: code-rgb
+          commit_user_email: 62891774+code-rgb@users.noreply.github.com
+          commit_author: code-rgb <62891774+code-rgb@users.noreply.github.com>

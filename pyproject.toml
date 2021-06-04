@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "emoji_captcha"
+version = "0.1.0"
+description = ""
+authors = ["Leorio Paradinight <62891774+code-rgb@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Pyrogram = "^1.2.9"
+TgCrypto = "^1.2.2"
+cryptography = "^3.4.7"
+aiohttp = "^3.7.4"
+ujson = "^4.0.2"
+beautifulsoup4 = "^4.9.3"
+Pillow = "^8.2.0"
+aiorun = "^2020.12.1"
+uvloop = "^0.15.2"
+
+aiofiles = "^0.7.0"
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+
+#
+# Code formatting
+#
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+
+[tool.yapf]
+based_on_style = "google"
+spaces_before_comment = 2
+split_before_logical_operator = true
+column_limit=88
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
