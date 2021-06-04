@@ -18,7 +18,7 @@ uvloop = "^0.15.2"
 
 aiofiles = "^0.7.0"
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 
 
 #
