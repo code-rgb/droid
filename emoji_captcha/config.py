@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Any, Iterator, Tuple
+from typing import Any, Dict
 
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
@@ -35,8 +35,8 @@ class Config:
         self.down_path.mkdir(exist_ok=True)
 
     @property
-    def _client(self) -> Iterator[Tuple[str, Any]]:
-        return map(
+    def _client(self) -> Dict[str, Any]:
+        return dict(map(
             lambda x: (x, getattr(self, x, None)),
             ("api_id", "api_hash", "bot_token", "workers", "sleep_threshold"),
-        )
+        ))

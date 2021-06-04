@@ -4,7 +4,7 @@ from io import BytesIO
 from pathlib import Path
 from shutil import rmtree
 from time import perf_counter
-from typing import Dict, List, Set, Union
+from typing import Dict, List, Set, Union, Optional
 
 import aiofiles
 import ujson
@@ -13,7 +13,7 @@ from cryptography.fernet import Fernet
 from PIL import Image
 from pyrogram import emoji
 from pyrogram.types import InlineKeyboardButton
-
+from abc import ABC
 
 # Errors
 class EmojiLoadFailed(Exception):
@@ -59,7 +59,7 @@ class EmojiCaptcha(ABC):
             "name": "apple",
             "version": "ios-12.2",
         }
-        self._emoji_data = Path(f"{self.__class__.__name__.lower()}.txt")
+        self._emoji_data = Path("emoji_data.txt")
         self._is_loaded = self._emoji_data.is_file() and any(
             self.config.down_path.iterdir())
         super().__init__()
@@ -130,7 +130,7 @@ class EmojiCaptcha(ABC):
                 return
             img_bytes = await resp.read()
         try:
-            async with aiofiles.open(f"{filename}.{ext}", mode="wb") as f:
+            async with aiofiles.open(f"{self.config.down_path}/{filename}.{ext}", mode="wb") as f:
                 await f.write(img_bytes)
         except Exception as e:
             self.log.error(f"{e.__class__.__name__}: {e}")
@@ -139,14 +139,14 @@ class EmojiCaptcha(ABC):
 
     async def download_emoji_imgs(self, emojis: Dict[str, str]) -> None:
         rmtree(self.config.down_path, ignore_errors=True)
-        self.down_path.mkdir(exist_ok=True)
+        self.config.down_path.mkdir(exist_ok=True)
         tasks = [
-            asyncio.ensure_future(save_to_file(url=img_url, filename=emoji_name))
+            asyncio.ensure_future(self.save_to_file(url=img_url, filename=emoji_name))
             for emoji_name, img_url in emojis.items()
         ]
-        self.log.info(f"  Preparing to Download {len(tasks)} files ...")
+        self.log.info(f"Preparing to Download {len(tasks)} files ...")
         all_emojis = await asyncio.gather(*tasks)
-        self.log.info("  Done, Downloaded Sucessfully !")
+        self.log.info("Done, Downloaded Sucessfully !")
         emoji_keys = list(filter(None, all_emojis))
         self.total_emoji = len(emoji_keys)
         with self._emoji_data.open("w") as fb:

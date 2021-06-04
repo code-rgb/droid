@@ -47,8 +47,8 @@ class Bot(PyroBot, EmojiCaptcha):
             self.log.info("Closing http session...")
             await self.http_session.close()
         if self.client.is_initialized:
+            self.log.info("Stopping pyrogram client...")
             await self.client.stop()
-            self.log.info("Pyrogram client closed.")
         self.log.info("Bot stopped.")
         self.loop.stop()
 
