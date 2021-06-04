@@ -36,7 +36,8 @@ class Config:
 
     @property
     def _client(self) -> Dict[str, Any]:
-        return dict(map(
-            lambda x: (x, getattr(self, x, None)),
-            ("api_id", "api_hash", "bot_token", "workers", "sleep_threshold"),
-        ))
+        return dict(
+            map(
+                lambda x: (x, getattr(self, x, None)),
+                ("api_id", "api_hash", "bot_token", "workers", "sleep_threshold"),
+            ))

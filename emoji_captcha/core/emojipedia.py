@@ -1,10 +1,11 @@
 import asyncio
 import random
+from abc import ABC
 from io import BytesIO
 from pathlib import Path
 from shutil import rmtree
 from time import perf_counter
-from typing import Dict, List, Set, Union, Optional
+from typing import Dict, List, Optional, Set, Union
 
 import aiofiles
 import ujson
@@ -13,9 +14,10 @@ from cryptography.fernet import Fernet
 from PIL import Image
 from pyrogram import emoji
 from pyrogram.types import InlineKeyboardButton
-from abc import ABC
 
 # Errors
+
+
 class EmojiLoadFailed(Exception):
     pass
 
@@ -130,7 +132,8 @@ class EmojiCaptcha(ABC):
                 return
             img_bytes = await resp.read()
         try:
-            async with aiofiles.open(f"{self.config.down_path}/{filename}.{ext}", mode="wb") as f:
+            async with aiofiles.open(f"{self.config.down_path}/{filename}.{ext}",
+                                     mode="wb") as f:
                 await f.write(img_bytes)
         except Exception as e:
             self.log.error(f"{e.__class__.__name__}: {e}")
