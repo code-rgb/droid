@@ -1,18 +1,15 @@
 import asyncio
 import logging
-import os
-import signal
 import time
 from datetime import datetime
 from typing import Optional
 
 import aiohttp
-import pyrogram
 import ujson
 
 from ..config import Config
-from .pyrogram_bot import PyroBot
 from .emojipedia import EmojiCaptcha
+from .pyrogram_bot import PyroBot
 
 
 class Bot(PyroBot, EmojiCaptcha):

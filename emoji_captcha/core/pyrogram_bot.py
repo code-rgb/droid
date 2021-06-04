@@ -1,16 +1,8 @@
 import asyncio
-import os
 import signal
-import time
 from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Optional
 
-import aiohttp
 import pyrogram
-import ujson
-
-from ..config import Config
 
 
 class PyroBot(ABC):
