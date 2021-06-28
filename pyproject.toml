@@ -14,9 +14,11 @@ ujson = "^4.0.2"
 beautifulsoup4 = "^4.9.3"
 Pillow = "^8.2.0"
 aiorun = "^2020.12.1"
-uvloop = "^0.15.2"
+
 
 aiofiles = "^0.7.0"
+python-dotenv = "^0.18.0"
+lxml = "^4.6.3"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 

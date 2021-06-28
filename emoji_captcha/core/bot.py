@@ -9,10 +9,11 @@ import ujson
 
 from ..config import Config
 from .emojipedia import EmojiCaptcha
+from .loader import Loader
 from .pyrogram_bot import PyroBot
 
 
-class Bot(PyroBot, EmojiCaptcha):
+class Bot(PyroBot, Loader, EmojiCaptcha):
     config: "Config"
     http_session: Optional[aiohttp.ClientSession]
     loop: asyncio.AbstractEventLoop
@@ -31,8 +32,12 @@ class Bot(PyroBot, EmojiCaptcha):
         super().__init__()
 
     @property
+    def __http_isactive(self) -> bool:
+        return self.http_session and not self.http_session.closed
+
+    @property
     def http(self) -> aiohttp.ClientSession:
-        if self.http_session is None or self.http_session.closed:
+        if not self.__http_isactive:
             self.http_session = aiohttp.ClientSession(json_serialize=ujson.dumps)
         return self.http_session
 
@@ -43,7 +48,7 @@ class Bot(PyroBot, EmojiCaptcha):
     async def stop(self):
         self.log.info("Stopping bot...")
         self.stopped = True
-        if self.http_session and not self.http_session.closed:
+        if self.__http_isactive:
             self.log.info("Closing http session...")
             await self.http_session.close()
         if self.client.is_initialized:

@@ -14,10 +14,13 @@ class PyroBot(ABC):
         super().__init__()
 
     async def init_bot(self):
-        self.client = pyrogram.Client(session_name=":memory:", **self.config._client)
+        self.client = pyrogram.Client(session_name="xbot", **self.config._client)
         await self.client.start()
         self.bot_info = await self.client.get_me()
         self.log.info("Pyrogram client stated.")
+        self.log.info("Loading modules...")
+        await self.load_modules()
+        await self.register_handlers()
 
     async def idle(self) -> None:
         signals = {
