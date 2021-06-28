@@ -43,7 +43,7 @@ class Loader(ABC):
         for plugin in self.plugins.values():
             for attr in dir(plugin):
                 if hasattr((func := getattr(plugin, attr)), "_handle"):
-                    self.log.info(f"<registering {func._handle} for {func.__name__}>")
+                    self.log.debug(f"<registering {func._handle} hander for {func.__name__}>")
                     if func._handle == "message":
                         handler = MessageHandler
                     elif func._handle == "inline":

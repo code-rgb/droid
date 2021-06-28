@@ -19,9 +19,10 @@ class OnCmd(BaseDecorator):
                  *args,
                  **kwargs):
         super().__init__(filters=(filters.command(cmd, prefixes, case_sensitive) &
-                                  self.base_filter(owner_only=owner_only)),
+                               self.base_filter(owner_only=owner_only)),
                          group=group,
                          handle="message",
+                         admin_only= admin_only,
                          *args,
                          **kwargs)
 
@@ -29,7 +30,7 @@ class OnCmd(BaseDecorator):
 
         async def func(_, __, query):
             # Check query
-            if isinstance(query, Message):
+            if not isinstance(query, Message):
                 return False
             # Check Owner
             if owner_only and query.from_user.id != config.owner_id:

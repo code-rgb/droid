@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Install requirements
-        run: pip install autoflake yapf isort["pyproject"] toml black autopep8
+        run: pip install autoflake isort black autopep8
       - name: Check for showstoppers
         run: >-
           autopep8 --verbose --in-place --recursive --aggressive --aggressive
@@ -25,7 +25,6 @@ jobs:
         run: |
           black .
           isort .
-          yapf --style='{based_on_style: google, spaces_before_comment: 2, split_before_logical_operator: true, column_limit=88}' -ir .
       - name: Check lock file
         run: |
           if ! [[ -f "poetry.lock" ]]; then

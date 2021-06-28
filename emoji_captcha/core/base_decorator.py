@@ -8,13 +8,15 @@ from pyrogram.types import ChatMember, Message
 from ..mod import Module
 from .command_context import Ctx
 
-CHAT_ADMINS: Dict[int, List[ChatMember]]
+CHAT_ADMINS: Dict[int, List[ChatMember]] = {}
+
 
 
 class BaseDecorator:
     """Base decorator class"""
 
     def __init__(self, *args, **kwargs):
+        
         self.args = args
         self.kwargs = kwargs
 
@@ -60,3 +62,12 @@ class BaseDecorator:
                 admins = []
             CHAT_ADMINS[chat_id] = admins
         return m.from_user.id in list(map(lambda x: x.user.id, admins))
+
+
+
+def refresh_admin_cache(chat_id: int = 0, clear_all: bool = False) -> None:
+    global CHAT_ADMINS
+    if clear_all:
+        CHAT_ADMINS.clear()
+    else:
+        CHAT_ADMINS.pop(chat_id, None)
