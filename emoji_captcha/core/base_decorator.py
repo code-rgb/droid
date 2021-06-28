@@ -1,10 +1,12 @@
+import traceback
 from functools import wraps
+from typing import Dict, List
+
 from pyrogram import Client
-from typing import Pattern, Union, List, Dict
-from pyrogram.types import Message, ChatMember
+from pyrogram.types import ChatMember, Message
+
 from ..mod import Module
 from .command_context import Ctx
-import traceback
 
 CHAT_ADMINS: Dict[int, List[ChatMember]]
 
@@ -23,6 +25,7 @@ class BaseDecorator:
             setattr(_func, "_priority", self.kwargs.get("group", 0))
 
     def __call__(self, func):
+
         @wraps(func)
         async def wrapper(mod: Module, client: Client, message: Message):
 
@@ -32,13 +35,10 @@ class BaseDecorator:
             try:
                 out = await func(mod, Ctx(message))
             except Exception as exc:
-                mod.log.error(
-                    "".join(
-                        traceback.format_exception(
-                            etype=type(exc), value=exc, tb=exc.__traceback__
-                        )
-                    )
-                )
+                mod.log.error("".join(
+                    traceback.format_exception(etype=type(exc),
+                                               value=exc,
+                                               tb=exc.__traceback__)))
             else:
                 return out
 

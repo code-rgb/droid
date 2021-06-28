@@ -3,13 +3,13 @@ import inspect
 from abc import ABC
 from typing import Dict
 
-from pyrogram import filters
-from pyrogram.handlers import MessageHandler, CallbackQueryHandler, InlineQueryHandler
+from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
 
 from .. import mod, modules
 
 
 class Loader(ABC):
+
     def __init__(self):
         self.plugins: Dict = {}
         super().__init__()
@@ -32,12 +32,8 @@ class Loader(ABC):
             on_load_tasks = filter(
                 None,
                 map(
-                    lambda x: func()
-                    if (
-                        (func := getattr(x, "on_load", None))
-                        and inspect.iscoroutinefunction(func)
-                    )
-                    else None,
+                    lambda x: func() if ((func := getattr(x, "on_load", None)) and
+                                         inspect.iscoroutinefunction(func)) else None,
                     self.plugins.values(),
                 ),
             )
@@ -57,6 +53,5 @@ class Loader(ABC):
                     else:
                         raise ValueError(f"Invalid Handler type: {func._handle}")
 
-                    self.client.add_handler(
-                        handler(func, func._filters), func._priority
-                    )
+                    self.client.add_handler(handler(func, func._filters),
+                                            func._priority)

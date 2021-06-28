@@ -4,6 +4,7 @@ from .. import mod
 
 
 class HelloWorld(mod.Module):
+
     async def on_load(self):
         self.log.info("on_load task from hello world")
 

@@ -23,15 +23,15 @@ class EmojiLoadFailed(Exception):
 
 
 class Cipher(Fernet):
+
     def __init__(self, cipher_key: bytes):
         super().__init__(key=cipher_key)
 
     def __process_data(self, data: Union[str, bytes], mode: str) -> str:
         if not isinstance(data, bytes):
             data = data.encode()
-        return (
-            super().encrypt(data) if mode == "encrypt" else super().decrypt(data)
-        ).decode("utf-8")
+        return (super().encrypt(data)
+                if mode == "encrypt" else super().decrypt(data)).decode("utf-8")
 
     def encrypt(self, data: Union[str, bytes]) -> str:
         return self.__process_data(data=data, mode="encrypt")
@@ -63,8 +63,7 @@ class EmojiCaptcha(ABC):
         }
         self._emoji_data = Path("emoji_data.txt")
         self._is_loaded = self._emoji_data.is_file() and any(
-            self.config.down_path.iterdir()
-        )
+            self.config.down_path.iterdir())
         super().__init__()
 
     async def emoji_load(self) -> None:
@@ -80,17 +79,12 @@ class EmojiCaptcha(ABC):
 
     def get_pyro_emoji(self) -> Set[str]:
         self.log.info("Loading emoji from pyrogram.")
-        return set(
-            [
-                e.lower().replace("_", "-")
-                for e in dir(emoji)
-                if (
-                    not e.startswith("_")
-                    and (e_value := getattr(emoji, e, None))
-                    and len(e_value) == 1
-                )
-            ]
-        )
+        return set([
+            e.lower().replace("_", "-")
+            for e in dir(emoji)
+            if (not e.startswith("_") and (
+                e_value := getattr(emoji, e, None)) and len(e_value) == 1)
+        ])
 
     async def get_baseimg(self) -> Optional[str]:
         base_img_url = "https://github.com/code-rgb/pyrocaptcha/raw/main/base_img.png"
@@ -121,28 +115,25 @@ class EmojiCaptcha(ABC):
                         lambda x: (
                             x.a.get("href")[:-1].split("/")[-1],
                             (x.a.img.get("data-src") or "").replace(
-                                "thumbs/72", "thumbs/320"
-                            ),
+                                "thumbs/72", "thumbs/320"),
                         ),
-                        soup(text, "lxml")
-                        .find("ul", {"class": "emoji-grid"})
-                        .findAll("li"),
+                        soup(text, "lxml").find("ul", {
+                            "class": "emoji-grid"
+                        }).findAll("li"),
                     ),
-                )
-            )
-        )
+                )))
 
-    async def save_to_file(
-        self, url: str, filename: str, ext: str = "png"
-    ) -> Optional[str]:
+    async def save_to_file(self,
+                           url: str,
+                           filename: str,
+                           ext: str = "png") -> Optional[str]:
         async with self.http.get(url) as resp:
             if resp.status != 200:
                 return
             img_bytes = await resp.read()
         try:
-            async with aiofiles.open(
-                f"{self.config.down_path}/{filename}.{ext}", mode="wb"
-            ) as f:
+            async with aiofiles.open(f"{self.config.down_path}/{filename}.{ext}",
+                                     mode="wb") as f:
                 await f.write(img_bytes)
         except Exception as e:
             self.log.error(f"{e.__class__.__name__}: {e}")
@@ -174,12 +165,9 @@ class EmojiCaptcha(ABC):
         base_img = await self.get_baseimg()
         background = Image.open(base_img)
         for input_e, pos in zip(emo_list, position):
-            image_paste = (
-                Image.open(f"{self.config.down_path}/{input_e}.png")
-                .convert("RGBA")
-                .resize((380, 380), Image.LANCZOS)
-                .rotate(random.randint(0, 360), expand=True)
-            )
+            image_paste = (Image.open(f"{self.config.down_path}/{input_e}.png").convert(
+                "RGBA").resize((380, 380), Image.LANCZOS).rotate(random.randint(0, 360),
+                                                                 expand=True))
             background.paste(image_paste, pos, image_paste)
         img_io = BytesIO()
         background.save(img_io, format="PNG")
