@@ -1,5 +1,7 @@
-from  .core.base_decorator import BaseDecorator
 from typing import Pattern, Union
+
+from .core.base_decorator import BaseDecorator
+
 
 class OnCmd(BaseDecorator):
 

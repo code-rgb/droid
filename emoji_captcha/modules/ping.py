@@ -1,8 +1,8 @@
 from pyrogram import Client
 from pyrogram.types import Message
 
-from ..decorator import OnCmd
 from .. import mod
+from ..decorator import OnCmd
 
 
 class Ping(mod.Module):

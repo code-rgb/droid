@@ -1,5 +1,4 @@
 from functools import wraps
-from typing import Pattern, Union
 
 
 class BaseDecorator:
@@ -18,5 +17,3 @@ class BaseDecorator:
         wrapper._args = self.args
         wrapper._kwargs = self.kwargs
         return wrapper
-
-

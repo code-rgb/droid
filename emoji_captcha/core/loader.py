@@ -33,8 +33,8 @@ class Loader(ABC):
             on_load_tasks = filter(
                 None,
                 map(
-                    lambda x: func() if ((func := getattr(x, "on_load", None)) and inspect
-                                         .iscoroutinefunction(func)) else None,
+                    lambda x: func() if ((func := getattr(x, "on_load", None)) and
+                                         inspect.iscoroutinefunction(func)) else None,
                     self.plugins.values(),
                 ),
             )
