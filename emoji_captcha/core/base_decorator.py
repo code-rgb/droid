@@ -11,12 +11,11 @@ from .command_context import Ctx
 CHAT_ADMINS: Dict[int, List[ChatMember]] = {}
 
 
-
 class BaseDecorator:
     """Base decorator class"""
 
     def __init__(self, *args, **kwargs):
-        
+
         self.args = args
         self.kwargs = kwargs
 
@@ -27,7 +26,6 @@ class BaseDecorator:
             setattr(_func, "_priority", self.kwargs.get("group", 0))
 
     def __call__(self, func):
-
         @wraps(func)
         async def wrapper(mod: Module, client: Client, message: Message):
 
@@ -37,10 +35,13 @@ class BaseDecorator:
             try:
                 out = await func(mod, Ctx(message))
             except Exception as exc:
-                mod.log.error("".join(
-                    traceback.format_exception(etype=type(exc),
-                                               value=exc,
-                                               tb=exc.__traceback__)))
+                mod.log.error(
+                    "".join(
+                        traceback.format_exception(
+                            etype=type(exc), value=exc, tb=exc.__traceback__
+                        )
+                    )
+                )
             else:
                 return out
 
@@ -62,7 +63,6 @@ class BaseDecorator:
                 admins = []
             CHAT_ADMINS[chat_id] = admins
         return m.from_user.id in list(map(lambda x: x.user.id, admins))
-
 
 
 def refresh_admin_cache(chat_id: int = 0, clear_all: bool = False) -> None:

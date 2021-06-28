@@ -9,7 +9,6 @@ from .. import mod, modules
 
 
 class Loader(ABC):
-
     def __init__(self):
         self.plugins: Dict = {}
         super().__init__()
@@ -32,8 +31,12 @@ class Loader(ABC):
             on_load_tasks = filter(
                 None,
                 map(
-                    lambda x: func() if ((func := getattr(x, "on_load", None)) and
-                                         inspect.iscoroutinefunction(func)) else None,
+                    lambda x: func()
+                    if (
+                        (func := getattr(x, "on_load", None))
+                        and inspect.iscoroutinefunction(func)
+                    )
+                    else None,
                     self.plugins.values(),
                 ),
             )
@@ -43,7 +46,9 @@ class Loader(ABC):
         for plugin in self.plugins.values():
             for attr in dir(plugin):
                 if hasattr((func := getattr(plugin, attr)), "_handle"):
-                    self.log.debug(f"<registering {func._handle} hander for {func.__name__}>")
+                    self.log.debug(
+                        f"<registering {func._handle} hander for {func.__name__}>"
+                    )
                     if func._handle == "message":
                         handler = MessageHandler
                     elif func._handle == "inline":
@@ -53,5 +58,6 @@ class Loader(ABC):
                     else:
                         raise ValueError(f"Invalid Handler type: {func._handle}")
 
-                    self.client.add_handler(handler(func, func._filters),
-                                            func._priority)
+                    self.client.add_handler(
+                        handler(func, func._filters), func._priority
+                    )

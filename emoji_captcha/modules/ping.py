@@ -1,8 +1,7 @@
-from pyrogram.methods import messages
 from .. import mod
-from ..decorator import OnCmd
-from ..core.command_context import Ctx
 from ..core.base_decorator import refresh_admin_cache
+from ..core.command_context import Ctx
+from ..decorator import OnCmd
 
 
 class Ping(mod.Module):
@@ -13,7 +12,6 @@ class Ping(mod.Module):
     @OnCmd("pingme", admin_only=True)
     async def on_message(self, ctx: Ctx):
         await ctx.msg.reply_text("pong")
-
 
     @OnCmd("clear_cache", admin_only=True)
     async def cmd_clear_cache(self, ctx: Ctx):

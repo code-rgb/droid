@@ -8,26 +8,30 @@ from .core.base_decorator import BaseDecorator
 
 
 class OnCmd(BaseDecorator):
-
-    def __init__(self,
-                 cmd: Union[str, List[str]],
-                 prefixes: Union[str, List[str]] = "/",
-                 case_sensitive: bool = False,
-                 group: int = 0,
-                 owner_only: bool = False,
-                 admin_only: bool = False,
-                 *args,
-                 **kwargs):
-        super().__init__(filters=(filters.command(cmd, prefixes, case_sensitive) &
-                               self.base_filter(owner_only=owner_only)),
-                         group=group,
-                         handle="message",
-                         admin_only= admin_only,
-                         *args,
-                         **kwargs)
+    def __init__(
+        self,
+        cmd: Union[str, List[str]],
+        prefixes: Union[str, List[str]] = "/",
+        case_sensitive: bool = False,
+        group: int = 0,
+        owner_only: bool = False,
+        admin_only: bool = False,
+        *args,
+        **kwargs
+    ):
+        super().__init__(
+            filters=(
+                filters.command(cmd, prefixes, case_sensitive)
+                & self.base_filter(owner_only=owner_only)
+            ),
+            group=group,
+            handle="message",
+            admin_only=admin_only,
+            *args,
+            **kwargs
+        )
 
     def base_filter(self, owner_only: bool = False):
-
         async def func(_, __, query):
             # Check query
             if not isinstance(query, Message):
