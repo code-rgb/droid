@@ -4,13 +4,12 @@ from abc import ABC
 from typing import Dict
 
 from pyrogram import filters
-from pyrogram.handlers import MessageHandler
+from pyrogram.handlers import MessageHandler, CallbackQueryHandler, InlineQueryHandler
 
 from .. import mod, modules
 
 
 class Loader(ABC):
-
     def __init__(self):
         self.plugins: Dict = {}
         super().__init__()
@@ -33,26 +32,31 @@ class Loader(ABC):
             on_load_tasks = filter(
                 None,
                 map(
-                    lambda x: func() if ((func := getattr(x, "on_load", None)) and
-                                         inspect.iscoroutinefunction(func)) else None,
+                    lambda x: func()
+                    if (
+                        (func := getattr(x, "on_load", None))
+                        and inspect.iscoroutinefunction(func)
+                    )
+                    else None,
                     self.plugins.values(),
                 ),
             )
             await asyncio.gather(*on_load_tasks)
 
     async def register_handlers(self):
-        for i in self.plugins.values():
-            if hasattr(i, "on_message") and hasattr(
-                (func := i.on_message), "__wrapped__"):
-                print("added handler")
-                regex = func._kwargs.get("regex")
-                group = func._kwargs.get("group")
-                self.client.add_handler(MessageHandler(func, filters.command(regex)),
-                                        group)
+        for plugin in self.plugins.values():
+            for attr in dir(plugin):
+                if hasattr((func := getattr(plugin, attr)), "_handle"):
+                    self.log.info(f"<registering {func._handle} for {func.__name__}>")
+                    if func._handle == "message":
+                        handler = MessageHandler
+                    elif func._handle == "inline":
+                        handler = InlineQueryHandler
+                    elif func._handle == "callback":
+                        handler = CallbackQueryHandler
+                    else:
+                        raise ValueError(f"Invalid Handler type: {func._handle}")
 
-            # def on_command(self, cmd, group: int = 0):
-            #     def decorator(func: Callable) -> Callable:
-            #         self.client.add_handler(MessageHandler(
-            #             func, filters.command(cmd)), group)
-            #         return func
-            #     return decorator
+                    self.client.add_handler(
+                        handler(func, func._filters), func._priority
+                    )

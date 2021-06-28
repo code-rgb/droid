@@ -19,6 +19,7 @@ aiorun = "^2020.12.1"
 aiofiles = "^0.7.0"
 python-dotenv = "^0.18.0"
 lxml = "^4.6.3"
+uvloop = {version = "^0.15.2", platform = "linux"}
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 

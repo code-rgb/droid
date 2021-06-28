@@ -7,14 +7,14 @@ from typing import Optional
 import aiohttp
 import ujson
 
-from ..config import Config
+from ..config import config
 from .emojipedia import EmojiCaptcha
 from .loader import Loader
 from .pyrogram_bot import PyroBot
 
 
 class Bot(PyroBot, Loader, EmojiCaptcha):
-    config: "Config"
+    config: "config"
     http_session: Optional[aiohttp.ClientSession]
     loop: asyncio.AbstractEventLoop
     stopped: bool
@@ -23,7 +23,7 @@ class Bot(PyroBot, Loader, EmojiCaptcha):
 
     def __init__(self):
         self.http_session = None
-        self.config = Config()
+        self.config = config
         self.loop = asyncio.get_event_loop()
         self.log = logging.getLogger(self.__class__.__name__)
         self.start_datetime = datetime.utcnow()
