@@ -3,7 +3,12 @@ import inspect
 from abc import ABC
 from typing import Dict
 
-from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler, DeletedMessagesHandler
+from pyrogram.handlers import (
+    CallbackQueryHandler,
+    DeletedMessagesHandler,
+    InlineQueryHandler,
+    MessageHandler,
+)
 
 from .. import mod, modules
 
@@ -60,6 +65,4 @@ class Loader(ABC):
                     else:
                         raise ValueError(f"[!] Invalid Handler type: {func._handle}")
 
-                    self.client.add_handler(
-                        handler(func, func._filters), func._group
-                    )
+                    self.client.add_handler(handler(func, func._filters), func._group)

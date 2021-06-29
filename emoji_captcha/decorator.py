@@ -43,33 +43,24 @@ class OnCmd(BaseDecorator):
 
         return filters.create(func)
 
-    
+
 class OnFlt(BaseDecorator):
-    def __init__(
-        self,
-        filters: filters.Filter,
-        group: int = 0,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, filters: filters.Filter, group: int = 0, *args, **kwargs):
         super().__init__(
-            filters=filters,
-            group=group,
-            handle="message",
-            *args,
-            **kwargs
+            filters=filters, group=group, handle="message", *args, **kwargs
         )
 
 
 class OnCallback(BaseDecorator):
-    #TODO
+    # TODO
     pass
 
 
 class OnInline(BaseDecorator):
-    #TODO
+    # TODO
     pass
 
+
 class OnDelete(BaseDecorator):
-    #TODO
+    # TODO
     pass
