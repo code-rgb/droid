@@ -31,7 +31,7 @@ class OnCmd(BaseDecorator):
             **kwargs
         )
 
-    def base_filter(self, owner_only: bool = False):
+    def base_filter(self, owner_only: bool = False) -> filters.Filter:
         async def func(_, __, query):
             # Check query
             if not isinstance(query, Message):
@@ -42,3 +42,34 @@ class OnCmd(BaseDecorator):
             return True
 
         return filters.create(func)
+
+    
+class OnFlt(BaseDecorator):
+    def __init__(
+        self,
+        filters: filters.Filter,
+        group: int = 0,
+        *args,
+        **kwargs
+    ):
+        super().__init__(
+            filters=filters,
+            group=group,
+            handle="message",
+            *args,
+            **kwargs
+        )
+
+
+class OnCallback(BaseDecorator):
+    #TODO
+    pass
+
+
+class OnInline(BaseDecorator):
+    #TODO
+    pass
+
+class OnDelete(BaseDecorator):
+    #TODO
+    pass

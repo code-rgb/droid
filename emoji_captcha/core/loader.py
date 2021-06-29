@@ -3,7 +3,7 @@ import inspect
 from abc import ABC
 from typing import Dict
 
-from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
+from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler, DeletedMessagesHandler
 
 from .. import mod, modules
 
@@ -47,7 +47,7 @@ class Loader(ABC):
             for attr in dir(plugin):
                 if hasattr((func := getattr(plugin, attr)), "_handle"):
                     self.log.debug(
-                        f"<registering {func._handle} hander for {func.__name__}>"
+                        f"<Registering - {func._handle} hander - {func.__name__}>"
                     )
                     if func._handle == "message":
                         handler = MessageHandler
@@ -55,9 +55,11 @@ class Loader(ABC):
                         handler = InlineQueryHandler
                     elif func._handle == "callback":
                         handler = CallbackQueryHandler
+                    elif func._handle == "delete":
+                        handler = DeletedMessagesHandler
                     else:
-                        raise ValueError(f"Invalid Handler type: {func._handle}")
+                        raise ValueError(f"[!] Invalid Handler type: {func._handle}")
 
                     self.client.add_handler(
-                        handler(func, func._filters), func._priority
+                        handler(func, func._filters), func._group
                     )

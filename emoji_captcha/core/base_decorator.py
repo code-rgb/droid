@@ -21,9 +21,8 @@ class BaseDecorator:
 
     def _add_attr(self, _func):
         if not hasattr(_func, "_handle"):
-            setattr(_func, "_handle", self.kwargs.get("handle", "message"))
-            setattr(_func, "_filters", self.kwargs.get("filters"))
-            setattr(_func, "_priority", self.kwargs.get("group", 0))
+            for attr in ("handle", "filters", "group"):
+                setattr(_func, f"_{attr}", self.kwargs.get(attr))
 
     def __call__(self, func):
         @wraps(func)
