@@ -1,9 +1,9 @@
-from typing import List, Union
+from typing import List, Pattern, Union
 
 from pyrogram import filters
-from pyrogram.types import Message
+from pyrogram.types import CallbackQuery, InlineQuery, Message
 
-from .config import config
+from .config import botconfig
 from .core.base_decorator import BaseDecorator
 
 
@@ -31,13 +31,14 @@ class OnCmd(BaseDecorator):
             **kwargs
         )
 
-    def base_filter(self, owner_only: bool = False) -> filters.Filter:
+    @staticmethod
+    def base_filter(owner_only: bool = False) -> filters.Filter:
         async def func(_, __, query):
             # Check query
             if not isinstance(query, Message):
                 return False
             # Check Owner
-            if owner_only and query.from_user.id != config.owner_id:
+            if owner_only and query.from_user.id != botconfig.owner_id:
                 return False
             return True
 
@@ -52,13 +53,71 @@ class OnFlt(BaseDecorator):
 
 
 class OnCallback(BaseDecorator):
-    # TODO
-    pass
+    def __init__(
+        self,
+        regex: Union[str, Pattern],
+        group: int = 0,
+        owner_only: bool = False,
+        *args,
+        **kwargs
+    ):
+        super().__init__(
+            filters=(
+                filters.regex(regex, kwargs.get("flags", 0))
+                & self.base_filter(owner_only=owner_only)
+            ),
+            group=group,
+            handle="callback",
+            *args,
+            **kwargs
+        )
+
+    @staticmethod
+    def base_filter(owner_only: bool = False) -> filters.Filter:
+        async def func(_, __, query):
+            # Check query
+            if not isinstance(query, CallbackQuery):
+                return False
+            # Check Owner
+            if owner_only and query.from_user.id != botconfig.owner_id:
+                return False
+            return True
+
+        return filters.create(func)
 
 
 class OnInline(BaseDecorator):
-    # TODO
-    pass
+    def __init__(
+        self,
+        regex: Union[str, Pattern],
+        group: int = 0,
+        owner_only: bool = False,
+        *args,
+        **kwargs
+    ):
+        super().__init__(
+            filters=(
+                filters.regex(regex, kwargs.get("flags", 0))
+                & self.base_filter(owner_only=owner_only)
+            ),
+            group=group,
+            handle="inline",
+            *args,
+            **kwargs
+        )
+
+    @staticmethod
+    def base_filter(owner_only: bool = False) -> filters.Filter:
+        async def func(_, __, query):
+            # Check query
+            if not isinstance(query, InlineQuery):
+                return False
+            # Check Owner
+            if owner_only and query.from_user.id != botconfig.owner_id:
+                return False
+            return True
+
+        return filters.create(func)
 
 
 class OnDelete(BaseDecorator):

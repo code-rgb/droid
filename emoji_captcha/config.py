@@ -45,4 +45,4 @@ class Config:
         )
 
 
-config = Config()
+botconfig = Config()

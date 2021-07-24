@@ -7,24 +7,24 @@ from typing import Optional
 import aiohttp
 import ujson
 
-from ..config import config
+from ..config import Config, botconfig
 from .emojipedia import EmojiCaptcha
 from .loader import Loader
 from .pyrogram_bot import PyroBot
 
 
 class Bot(PyroBot, Loader, EmojiCaptcha):
-    config: "config"
+    config: Config
     http_session: Optional[aiohttp.ClientSession]
     loop: asyncio.AbstractEventLoop
     stopped: bool
     uptime_reference: int
     log: logging.Logger
 
-    def __init__(self):
+    def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
         self.http_session = None
-        self.config = config
-        self.loop = asyncio.get_event_loop()
+        self.config = botconfig
+        self.loop = loop or asyncio.get_event_loop()
         self.log = logging.getLogger(self.__class__.__name__)
         self.start_datetime = datetime.utcnow()
         self.uptime_reference = time.monotonic_ns()
@@ -48,6 +48,8 @@ class Bot(PyroBot, Loader, EmojiCaptcha):
     async def stop(self):
         self.log.info("Stopping bot...")
         self.stopped = True
+        self.log.info("Executing on_exit tasks...")
+        await self.on_exit_tasks()
         if self.__http_isactive:
             self.log.info("Closing http session...")
             await self.http_session.close()
@@ -65,7 +67,7 @@ class Bot(PyroBot, Loader, EmojiCaptcha):
             asyncio.set_event_loop(loop)
 
         try:
-            bot = cls()
+            bot = cls(loop=loop)
             await bot.start()
             return bot
         finally:

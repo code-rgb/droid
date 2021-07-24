@@ -6,7 +6,6 @@ authors = ["Leorio Paradinight <62891774+code-rgb@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Pyrogram = "^1.2.9"
 TgCrypto = "^1.2.2"
 cryptography = "^3.4.7"
 aiohttp = "^3.7.4"
@@ -18,6 +17,9 @@ aiofiles = "^0.7.0"
 python-dotenv = "^0.18.0"
 lxml = "^4.6.3"
 uvloop = {version = "^0.15.2", platform = "linux"}
+html-telegraph-poster = "^0.4.0"
+Pyrogram = "^1.2.9"
+iytdl = "^0.2.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"

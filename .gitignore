@@ -147,3 +147,4 @@ vendor/
 *.log
 .cache
 emoji_data.txt
+yt_search_cache.db

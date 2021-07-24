@@ -25,15 +25,15 @@ class Loader(ABC):
                     continue
                 cls = getattr(m, attr, None)
                 await self.__load_classmod(cls)
-        await self.__init_classmod()
+        await self.on_load_tasks()
 
     async def __load_classmod(self, cls):
         if inspect.isclass(cls) and issubclass(cls, mod.Module) and not cls.disabled:
             self.plugins[cls.__name__] = cls(self)
 
-    async def __init_classmod(self):
+    async def on_load_tasks(self):
         if self.plugins:
-            on_load_tasks = filter(
+            on_load_tasks_ = filter(
                 None,
                 map(
                     lambda x: func()
@@ -45,7 +45,23 @@ class Loader(ABC):
                     self.plugins.values(),
                 ),
             )
-            await asyncio.gather(*on_load_tasks)
+            await asyncio.gather(*on_load_tasks_)
+
+    async def on_exit_tasks(self):
+        if self.plugins:
+            on_exit_tasks_ = filter(
+                None,
+                map(
+                    lambda x: func()
+                    if (
+                        (func := getattr(x, "on_exit", None))
+                        and inspect.iscoroutinefunction(func)
+                    )
+                    else None,
+                    self.plugins.values(),
+                ),
+            )
+            await asyncio.gather(*on_exit_tasks_)
 
     async def register_handlers(self):
         for plugin in self.plugins.values():
