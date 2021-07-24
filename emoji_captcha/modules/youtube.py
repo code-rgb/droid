@@ -1,10 +1,9 @@
 import logging
 
 # iytdl imports
-from iytdl import iYTDL, Process
+from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
 from iytdl.utils import rnd_key
-
 from pyrogram.types import (
     CallbackQuery,
     InlineQuery,
@@ -22,10 +21,12 @@ class YoutubeDL(mod.Module):
     async def on_load(self):
         # Initialise the class
         self.ytdl = await iYTDL.init(
-            session=self.bot.http,        # aiohttp.ClientSession (optional)
-            silent=True,                  # supress Youtubedl output
-            loop=self.bot.loop,           # event loop (optional)
-            log_group_id=-1001378211961,  # log channel to upload video before editing the inline message (required)
+            session=self.bot.http,  # aiohttp.ClientSession (optional)
+            silent=True,  # supress Youtubedl output
+            loop=self.bot.loop,  # event loop (optional)
+            log_group_id=-1001378211961,
+            # log channel to upload video before editing the inline message
+            # (required)
         )
 
     async def on_exit(self):
@@ -35,7 +36,8 @@ class YoutubeDL(mod.Module):
     @OnInline(r"ytdl (.+)", owner_only=True)
     async def on_inline(self, i_q: InlineQuery):
         query = i_q.matches[0].group(1)
-        # parse: Automatically detects generic url, youtube link or even a search query
+        # parse: Automatically detects generic url, youtube link or even a
+        # search query
         data = await self.ytdl.parse(query, extract=False)
         await i_q.answer(
             results=[
@@ -82,7 +84,8 @@ class YoutubeDL(mod.Module):
     async def extract_info(self, c_q: CallbackQuery):
         await c_q.answer()
         key = c_q.matches[0].group("key")
-        # After answeing InlineQuery now the extract the info and edit the messsage
+        # After answeing InlineQuery now the extract the info and edit the
+        # messsage
         if data := await self.ytdl.extract_info_from_key(key):
             # Youtube Link i.e no need to edit Image
             if len(key) == 11:
@@ -110,16 +113,18 @@ class YoutubeDL(mod.Module):
         data = c_q.matches[0].group
 
         if data("mode") == "gen":
-            yt_url = False # Generic URL
+            yt_url = False  # Generic URL
             video_link = await self.ytdl.cache.get_url(data("key"))
         else:
-            yt_url = True # YouTube URL
+            yt_url = True  # YouTube URL
             video_link = f"{YT_VID_URL}{data('key')}"
 
         downtype = "video" if data("dl_type") == "v" else "audio"
-        
+
         # Preffered Quality
-        uid, disp_str = self.ytdl.get_choice_by_id(data("choice"), downtype, yt_url=yt_url)
+        uid, disp_str = self.ytdl.get_choice_by_id(
+            data("choice"), downtype, yt_url=yt_url
+        )
 
         await c_q.answer(f"⬇️ Downloading {downtype} - {disp_str}", show_alert=True)
 
@@ -145,9 +150,7 @@ class YoutubeDL(mod.Module):
             link=video_link,
         )
 
-    @OnCallback(
-        r"^yt_cancel\|(?P<process_id>[\w\.]+)$"
-    )
+    @OnCallback(r"^yt_cancel\|(?P<process_id>[\w\.]+)$")
     async def yt_cancel(self, c_q: CallbackQuery):
         await c_q.answer("Trying to Cancel Process..")
         process_id = c_q.matches[0].group("process_id")
@@ -155,11 +158,5 @@ class YoutubeDL(mod.Module):
         if c_q.message:
             await c_q.message.delete()
         else:
-            await c_q.edit_message_text(
-                "`Stopped Successfully`"
-            )
+            await c_q.edit_message_text("`Stopped Successfully`")
         Process.cancel_id(process_id)
-        
-
-
-

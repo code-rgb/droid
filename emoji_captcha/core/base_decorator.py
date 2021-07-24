@@ -2,10 +2,9 @@ import logging
 from functools import wraps
 from typing import Dict, List
 
-from pyrogram import Client
-from pyrogram.types import ChatMember, InlineQuery, Message, Update
-from  pyrogram import StopPropagation, StopTransmission, ContinuePropagation
-from ..config import botconfig
+from pyrogram import Client, ContinuePropagation, StopPropagation, StopTransmission
+from pyrogram.types import ChatMember, Message, Update
+
 from ..mod import Module
 from ..utils import format_exception
 from .command_context import Ctx
