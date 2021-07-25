@@ -266,13 +266,14 @@ python-versions = "*"
 
 [[package]]
 name = "iytdl"
-version = "0.2.5"
+version = "0.3.1"
 description = "Asynchronous Standalone Inline YouTube-DL Module"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4"
 
 [package.dependencies]
+aiohttp = ">=3.7.4,<4.0.0"
 aiosqlite = ">=0.17.0,<0.18.0"
 hachoir = ">=3.1.2,<4.0.0"
 html-telegraph-poster = ">=0.4.0,<0.5.0"
@@ -578,7 +579,7 @@ httpx = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "52cdf51496e94977b16ddbd169a6fd7b4005a0020445742be4b0a8f25520fd7e"
+content-hash = "ef9c00365327046fc7fd3c81b8b829816b092848cc125c7b5a84ab59797c2d17"
 
 [metadata.files]
 aiofiles = [
@@ -762,8 +763,8 @@ iniconfig = [
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 iytdl = [
-    {file = "iytdl-0.2.5-py3-none-any.whl", hash = "sha256:65b02c01529253263fb1c4af01a2873ed2eabda785e0d9f0114b216c28110695"},
-    {file = "iytdl-0.2.5.tar.gz", hash = "sha256:d1c31f9eb7df27dcf3d872f14108280fdf595fdac8f7ac1ac2e16eb5067ddaf8"},
+    {file = "iytdl-0.3.1-py3-none-any.whl", hash = "sha256:774d43d94a2629db32b8bb69a49cc86b4f2c03ecd345b223fbe39c79c378c020"},
+    {file = "iytdl-0.3.1.tar.gz", hash = "sha256:00f444c9b517cdc8077a6ef324041ae7d760c9417c1668baed60491d033f901e"},
 ]
 lxml = [
     {file = "lxml-4.6.3-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:df7c53783a46febb0e70f6b05df2ba104610f2fb0d27023409734a3ecbb78fb2"},
