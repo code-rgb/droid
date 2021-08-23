@@ -35,7 +35,6 @@ jobs:
                   poetry run black .
             - name: Export requirements
               run: |
-                  rm requirements.txt
                   poetry export -f requirements.txt --output requirements.txt
             - uses: stefanzweifel/git-auto-commit-action@v4
               with:
