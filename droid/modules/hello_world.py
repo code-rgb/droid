@@ -1,5 +1,4 @@
 from .. import mod
-
 from ..decor import OnCmd
 
 
