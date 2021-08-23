@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-python -m droid
+if ! [ test $DYNO ] && [ command -v poetry ] &> /dev/null ; then
+    poetry install &> /dev/null
+fi
+
+poetry run python -m droid

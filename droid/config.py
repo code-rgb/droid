@@ -25,9 +25,7 @@ class Config:
     heroku_app_name: str = get_env("HEROKU_APP")
     workers: int = (lambda x: int(x) if x else Scaffold.WORKERS)(get_env("WORKERS"))
     owner_id: List[int] = field(default_factory=list)
-
     sudo_users: List[int] = field(default_factory=list)
-
     sleep_threshold: int = int(get_env("SLEEP_THRESHOLD", 180))
     down_path: Path = Path(get_env("DOWN_PATH", "downloads"))
     workdir: str = get_env("WORKDIR", "session")
@@ -35,8 +33,9 @@ class Config:
 
     def __post_init__(self):
         self.down_path.mkdir(exist_ok=True)
+        Path(self.workdir).mkdir(exist_ok=True)
         for attr in ("owner_id", "sudo_users"):
-            value = list(
+            getattr(self, attr).extend(
                 filter(
                     None,
                     map(
@@ -44,11 +43,6 @@ class Config:
                         get_env(attr.upper(), "").split(),
                     ),
                 )
-            )
-            setattr(
-                self,
-                attr,
-                value,
             )
 
     @property
