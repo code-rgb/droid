@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-if ! [ test $DYNO ] && [ command -v poetry ] &> /dev/null ; then
-    poetry install &> /dev/null
-fi
+exists() {
+    command -v "$1" >/dev/null 2>&1
+}
 
-poetry run python -m droid
+if exists poetry ; then
+    poetry install &> /dev/null
+    poetry run python -m droid
+else
+    python -m droid
+fi

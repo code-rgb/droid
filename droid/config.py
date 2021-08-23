@@ -1,5 +1,5 @@
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -60,6 +60,14 @@ class Config:
                 ),
             )
         )
+
+    def create_sample(self) -> None:
+        with open("config.env.sample", "w") as outfile:
+            outfile.write(
+                "\n".join(
+                    sorted([f'{x.upper()}=""' for x in self.__dataclass_fields__])
+                )
+            )
 
 
 CONFIG = Config()

@@ -148,3 +148,4 @@ vendor/
 .cache
 *.db
 session/
+*.tmp
