@@ -1,0 +1,47 @@
+name: On Push Tasks
+
+on: push
+
+jobs:
+    EVENTS:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup Python
+              uses: actions/setup-python@v1
+              with:
+                  python-version: 3.9
+            - name: Install Poetry
+              run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+            - name: Add Poetry to path
+              run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
+            - name: Get Poetry version
+              run: poetry --version
+            - name: Check pyproject.toml validity
+              run: poetry check --no-interaction
+            - name: Installing requirements
+              run: poetry install --no-interaction
+            - name: Check for showstoppers
+              run: >
+                  poetry run autopep8 --verbose --in-place --recursive --aggressive --aggressive
+                  --ignore=W605 .
+            - name: Remove unused imports and variables
+              run: >
+                  poetry run autoflake --in-place --recursive --remove-all-unused-imports
+                  --remove-unused-variables --ignore-init-module-imports .
+            - name: Code formater
+              run: |
+                  poetry run isort .
+                  poetry run black .
+            - name: Export requirements
+              run: |
+                  rm requirements.txt
+                  poetry export -f requirements.txt --output requirements.txt
+            - uses: stefanzweifel/git-auto-commit-action@v4
+              with:
+                  commit_message: "on push: auto commit"
+                  commit_options: "--no-verify"
+                  repository: .
+                  commit_user_name: code-rgb
+                  commit_user_email: 62891774+code-rgb@users.noreply.github.com
+                  commit_author: code-rgb <62891774+code-rgb@users.noreply.github.com>
