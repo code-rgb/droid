@@ -1,5 +1,4 @@
 from .. import mod
-from ..core.base_decorator import refresh_admin_cache
 from ..core.command_context import Ctx
 from ..decor import OnCmd
 

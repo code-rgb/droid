@@ -2,7 +2,6 @@ import logging
 
 from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
-
 from iytdl.exceptions import NoResultFoundError
 from iytdl.utils import rnd_key
 from pyrogram.types import (
