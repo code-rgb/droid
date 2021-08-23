@@ -1,5 +1,4 @@
 import asyncio
-import traceback
 from functools import partial, wraps
 from typing import Any, Awaitable, Callable
 

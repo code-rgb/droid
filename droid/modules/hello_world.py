@@ -1,6 +1,5 @@
-from pyrogram.types import Message
-from ..decor import OnCmd
 from .. import mod
+from ..decor import OnCmd
 
 
 class HelloWorld(mod.Module):

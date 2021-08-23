@@ -4,9 +4,8 @@ import time
 from datetime import datetime
 from typing import Optional
 
+from ..config import CONFIG, Config
 from .http import Http
-
-from ..config import Config, CONFIG
 from .loader import Loader
 from .pyrogram_bot import PyroBot
 

@@ -1,10 +1,10 @@
 import os
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
-from dataclasses import dataclass, field
+
 from dotenv import load_dotenv
 from pyrogram.scaffold import Scaffold
-
 
 if os.path.isfile("config.env"):
     load_dotenv("config.env")

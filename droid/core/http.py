@@ -1,10 +1,9 @@
 import logging
 from typing import Any, Dict, Optional, Union
 
+import ujson
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ContentTypeError
-import ujson
-import logging
 
 LOG = logging.getLogger(__name__)
 
