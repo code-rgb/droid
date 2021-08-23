@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-exists() {
+cmdExists () {
     command -v "$1" >/dev/null 2>&1
 }
 
-if exists poetry ; then
+if cmdExists poetry ; then
+    echo "Checking Requirements..."
     poetry install &> /dev/null
     poetry run python -m droid
 else
