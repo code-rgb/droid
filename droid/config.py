@@ -1,11 +1,12 @@
+import logging
 import os
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
-import logging
+
 from dotenv import load_dotenv
 from pyrogram.scaffold import Scaffold
-import sys
 
 LOG = logging.getLogger(__name__)
 

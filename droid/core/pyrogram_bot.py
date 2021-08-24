@@ -1,11 +1,12 @@
 import asyncio
-from ..config import CONFIG
 import signal
 from abc import ABC, abstractmethod
 from typing import Optional
 
 from pyrogram import Client
 from pyrogram.types import User
+
+from ..config import CONFIG
 
 
 class PyroBot(ABC):

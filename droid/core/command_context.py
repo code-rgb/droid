@@ -1,8 +1,9 @@
-from typing import Dict, Optional, Union
-from pyrogram.types import Message
-from pyrogram.errors import MessageAuthorRequired
-import re
 import asyncio
+import re
+from typing import Dict, Optional, Union
+
+from pyrogram.errors import MessageAuthorRequired
+from pyrogram.types import Message
 
 FLAGS_RE = re.compile(r"(?:^|\s)-([A-Za-z]{1,10})[=]?([A-Za-z0-9]{1,10})?(?=$|\s)")
 

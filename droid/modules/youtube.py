@@ -1,5 +1,5 @@
 import logging
-from ..config import CONFIG
+
 from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
 from iytdl.exceptions import NoResultFoundError
@@ -12,6 +12,7 @@ from pyrogram.types import (
 )
 
 from .. import mod
+from ..config import CONFIG
 from ..decor import OnCallback, OnInline
 
 logger = logging.getLogger(__name__)
