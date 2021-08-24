@@ -2,18 +2,32 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
-
+import logging
 from dotenv import load_dotenv
 from pyrogram.scaffold import Scaffold
+import sys
 
-if os.path.isfile("config.env"):
-    load_dotenv("config.env")
+LOG = logging.getLogger(__name__)
 
 
 def get_env(key: str, default: Any = None) -> Any:
     if value := os.getenv(key):
         value = value.strip()
     return value or default
+
+
+if os.path.isfile("config.env"):
+    load_dotenv("config.env")
+
+
+if get_env("_____REMOVE_____THIS_____LINE_____"):
+    LOG.error(
+        (
+            "Please remove the line mentioned in the first"
+            " hashtag from the config.env file. Exiting!"
+        )
+    )
+    sys.exit(1)
 
 
 @dataclass
@@ -28,8 +42,11 @@ class Config:
     sudo_users: List[int] = field(default_factory=list)
     sleep_threshold: int = int(get_env("SLEEP_THRESHOLD", 180))
     down_path: Path = Path(get_env("DOWN_PATH", "downloads"))
-    workdir: str = get_env("WORKDIR", "session")
+    workdir: str = get_env("WORKDIR", "sessions")
     log_channel_id: int = int(get_env("LOG_CHANNEL_ID", 0))
+    string_session: str = get_env("STRING_SESSION")
+    max_caption_length: int = 1020
+    max_text_length: int = 4098
 
     def __post_init__(self):
         self.down_path.mkdir(exist_ok=True)
@@ -54,6 +71,7 @@ class Config:
                     "api_id",
                     "api_hash",
                     "bot_token",
+                    "string_session",
                     "workers",
                     "sleep_threshold",
                     "workdir",

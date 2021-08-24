@@ -4,21 +4,18 @@ import time
 from datetime import datetime
 from typing import Optional
 
-from ..config import CONFIG, Config
 from .http import Http
 from .loader import Loader
 from .pyrogram_bot import PyroBot
 
 
 class Bot(Http, PyroBot, Loader):
-    config: Config
     loop: asyncio.AbstractEventLoop
     stopped: bool
     uptime_reference: int
     log: logging.Logger
 
     def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
-        self.config = CONFIG
         self.loop = loop or asyncio.get_event_loop()
         self.log = logging.getLogger(self.__class__.__name__)
         self.start_datetime = datetime.utcnow()
@@ -38,8 +35,11 @@ class Bot(Http, PyroBot, Loader):
         self.log.info("Closing http session...")
         await self.close_session()
         if self.client.is_initialized:
-            self.log.info("Stopping pyrogram client...")
+            self.log.info("Stopping pyrogram bot...")
             await self.client.stop()
+        if self.userbot and self.userbot.is_initialized:
+            self.log.info("Stopping pyrogram userbot...")
+            await self.userbot.stop()
         self.log.info("Bot stopped.")
         self.loop.stop()
 

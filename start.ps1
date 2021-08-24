@@ -4,7 +4,7 @@ function CmdExists($cmdname) {
 
 if (CmdExists -cmdname 'poetry') {
     Write-Output "Checking Requirements..."
-    poetry install | Out-Null
+    # poetry install | Out-Null
     poetry run python -m droid
 }
 else {

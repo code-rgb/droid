@@ -1,23 +1,35 @@
 import asyncio
+from ..config import CONFIG
 import signal
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from pyrogram import Client
 from pyrogram.types import User
 
 
 class PyroBot(ABC):
+    # Bot
     client: Client
     bot_info: User
+    # Userbot
+    userbot: Optional[Client] = None
+    user_info: Optional[User] = None
     _is_running: bool
 
     def __init__(self):
         super().__init__()
 
     async def init_bot(self):
-        self.client = Client(session_name="droid", **self.config._client)
+        client_config = CONFIG._client.copy()
+        if string_session := client_config.pop("string_session", None):
+            self.userbot = Client(session_name=string_session, **client_config)
+        self.client = Client(session_name="droid", **client_config)
         await self.client.start()
         self.bot_info = await self.client.get_me()
+        if self.userbot:
+            await self.userbot.start()
+            self.user_info = await self.userbot.get_me()
         self.log.info("Pyrogram client stated.")
         self.log.info("Loading modules...")
         await self.load_modules()

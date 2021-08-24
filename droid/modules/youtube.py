@@ -1,5 +1,5 @@
 import logging
-
+from ..config import CONFIG
 from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
 from iytdl.exceptions import NoResultFoundError
@@ -23,7 +23,7 @@ class YoutubeDL(mod.Module):
             session=self.bot.http,
             silent=True,
             loop=self.bot.loop,
-            log_group_id=self.bot.config.log_channel_id,
+            log_group_id=CONFIG.log_channel_id,
         )
 
     async def on_exit(self):
