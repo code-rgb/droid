@@ -2,8 +2,7 @@ import logging
 from functools import wraps
 from typing import Dict, List
 
-from pyrogram import (Client, ContinuePropagation, StopPropagation,
-                      StopTransmission)
+from pyrogram import Client, ContinuePropagation, StopPropagation
 from pyrogram.types import ChatMember, Message, Update
 
 from ..mod import Module

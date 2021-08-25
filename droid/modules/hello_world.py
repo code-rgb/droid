@@ -1,8 +1,5 @@
 import asyncio
 
-
-from pyrogram import filters
-
 from .. import mod
 from ..core.conversation import Conversation
 from ..decor import OnCmd

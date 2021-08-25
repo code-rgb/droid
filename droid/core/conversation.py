@@ -3,9 +3,9 @@ Coversation Utils
 
 ~ Inspired by pyromod, Conversation-Pyrogram
 """
-from asyncio.futures import Future
 import asyncio
 import logging
+from asyncio.futures import Future
 from collections import OrderedDict
 from functools import partial
 from typing import Any, Dict, Optional, Union
