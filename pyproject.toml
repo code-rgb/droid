@@ -5,7 +5,7 @@ description = ""
 authors = ["Leorio Paradinight <62891774+code-rgb@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.8,<4"
 iytdl = "^0.3.1"
 aiorun = "^2021.8.1"
 uvloop = {version = "^0.16.0", platform = "linux"}
@@ -17,6 +17,7 @@ ImageHash = "^4.2.1"
 Pillow = "^8.3.1"
 PyYAML = "^5.4.1"
 meval = "^2.5"
+aiohttp = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"

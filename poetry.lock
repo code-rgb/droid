@@ -706,7 +706,7 @@ httpx = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "fc470cd8350346e2db46bb16f7c191e3e4931659814ffba3b27f06e271596555"
+content-hash = "fd22051351f94d04d3d09ecbbae022c2addde4b86e19d28fa3745eb0e350a91b"
 
 [metadata.files]
 aiohttp = [
