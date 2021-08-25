@@ -4,12 +4,8 @@ from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
 from iytdl.exceptions import NoResultFoundError
 from iytdl.utils import rnd_key
-from pyrogram.types import (
-    CallbackQuery,
-    InlineQuery,
-    InlineQueryResultPhoto,
-    InputMediaPhoto,
-)
+from pyrogram.types import (CallbackQuery, InlineQuery, InlineQueryResultPhoto,
+                            InputMediaPhoto)
 
 from .. import mod
 from ..config import CONFIG

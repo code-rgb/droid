@@ -33,7 +33,7 @@ def md5_hash(data: Union[str, bytes]) -> str:
 
 
 class Chash(mod.Module):
-    @OnCmd("chash")
+    @OnCmd("chash", owner_only=True)
     async def on_message(self, ctx: Ctx):
         reply = ctx.msg.reply_to_message
         if not (reply.text or reply.photo):

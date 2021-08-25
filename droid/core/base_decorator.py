@@ -2,7 +2,8 @@ import logging
 from functools import wraps
 from typing import Dict, List
 
-from pyrogram import Client, ContinuePropagation, StopPropagation, StopTransmission
+from pyrogram import (Client, ContinuePropagation, StopPropagation,
+                      StopTransmission)
 from pyrogram.types import ChatMember, Message, Update
 
 from ..mod import Module
@@ -35,10 +36,12 @@ class BaseDecorator:
 
             try:
                 out = await func(mod, context)
-            except (StopPropagation, StopTransmission, ContinuePropagation) as p_e:
-                raise p_e
-            except BaseException as exc:
-                mod.log.exception(f"{exc}: {exc.__class__.__name__}")
+            except StopPropagation:
+                raise
+            except ContinuePropagation:
+                pass
+            except Exception as e:
+                mod.log.error(e, exc_info=True)
             else:
                 return out
 

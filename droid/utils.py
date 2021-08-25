@@ -1,12 +1,13 @@
 import asyncio
+import traceback
 from functools import partial, wraps
 from typing import Any, Awaitable, Callable
 
-# import traceback
-# def format_exception(exc) -> str:
-#     return "".join(
-#         traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
-#     )
+
+def format_exception(exc) -> str:
+    return "".join(
+        traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
+    )
 
 
 def run_sync(func: Callable[..., Any]) -> Awaitable[Any]:
