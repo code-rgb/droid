@@ -45,12 +45,10 @@ class Http:
             async with self.http.get(url, **kwargs) as resp:
                 assert resp.status == 200
                 try:
-                    out = await resp.json(loads=ujson.loads)
+                    return await resp.json(loads=ujson.loads)
                 except ContentTypeError:
-                    out = ujson.loads(await resp.text())
+                    return ujson.loads(await resp.text())
         except Exception as e:
             if not ignore_errors:
                 raise e
             LOG.exception(f"{e}: {e.__class__.__name__}")
-        else:
-            return out

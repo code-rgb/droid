@@ -55,10 +55,14 @@ class Conversation:
         """check for active Conversation"""
         return self.chat_id in self.convo_dict
 
-    async def send(self, *args: Any, **kwargs: Any) -> Message:
+    async def send(self, *args: Any, del_in: float = 0.0, **kwargs: Any) -> Message:
         """Send message"""
         kwargs.pop("chat_id", None)
-        return await self.client.send_message(self.chat_id, *args, **kwargs)
+        msg = await self.client.send_message(self.chat_id, *args, **kwargs)
+        if isinstance(del_in, (int, float)) and del_in > 0:
+            await asyncio.sleep(del_in)
+            await msg.delete()
+        return msg
 
     async def listen(
         self,
@@ -123,7 +127,7 @@ class Conversation:
                 (
                     "Ended conversation, 🕐 Timeout reached !"
                     f"\n  Chat ID => {self.chat_id}"
-                    f"\n  Handler => {hndlr.__class__.__name__}"
+                    f"\n  Handler => {hndlr.__name__}"
                 )
             )
 
