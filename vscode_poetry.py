@@ -7,9 +7,8 @@ venv_path = venv_path.decode("UTF-8")
 
 Path(".vscode").mkdir(parents=True, exist_ok=True)
 vs_settings = Path(".vscode/settings.json")
-vs_settings.touch()
 
-if vs_settings.isfile():
+if vs_settings.is_file():
     with vs_settings.open("r") as f:
         settings = json.load(f)
 else:
