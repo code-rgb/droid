@@ -8,13 +8,12 @@ import logging
 from asyncio.futures import Future
 from collections import OrderedDict
 from functools import partial
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import pyrogram
 from pyrogram import Client
 from pyrogram.filters import Filter, create
-from pyrogram.handlers import (CallbackQueryHandler, InlineQueryHandler,
-                               MessageHandler)
+from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
 from pyrogram.types import CallbackQuery, InlineQuery, Message
 
 LOG = logging.getLogger("Conversation")
