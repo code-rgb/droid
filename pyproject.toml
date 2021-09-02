@@ -19,6 +19,7 @@ meval = "^2.5"
 aiohttp = "^3.7.4"
 pyinstaller = "^4.5.1"
 iytdl = "^0.4.1"
+altgraph = "^0.17"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
