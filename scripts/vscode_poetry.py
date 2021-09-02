@@ -8,11 +8,13 @@ venv_path = venv_path.decode("UTF-8")
 Path(".vscode").mkdir(parents=True, exist_ok=True)
 vs_settings = Path(".vscode/settings.json")
 
+settings = {}
 if vs_settings.is_file():
     with vs_settings.open("r") as f:
-        settings = json.load(f)
-else:
-    settings = {}
+        try:
+            settings = json.load(f)
+        except json.decoder.JSONDecodeError:
+            pass
 
 settings["python.pythonPath"] = venv_path
 

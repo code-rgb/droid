@@ -2,12 +2,8 @@ import asyncio
 import inspect
 from typing import Dict, List
 
-from pyrogram.handlers import (
-    CallbackQueryHandler,
-    DeletedMessagesHandler,
-    InlineQueryHandler,
-    MessageHandler,
-)
+from pyrogram.handlers import (CallbackQueryHandler, DeletedMessagesHandler,
+                               InlineQueryHandler, MessageHandler)
 
 from .. import mod, modules
 

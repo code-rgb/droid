@@ -1,9 +1,9 @@
 import logging
+from pathlib import Path
 
 from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
 from iytdl.exceptions import NoResultFoundError
-from iytdl.utils import rnd_key
 from pyrogram.types import (
     CallbackQuery,
     InlineQuery,
@@ -12,23 +12,26 @@ from pyrogram.types import (
 )
 
 from .. import mod
-from ..config import CONFIG
 from ..decor import OnCallback, OnInline
 
-logger = logging.getLogger(__name__)
+LOG_CHANNEL_ID = -1001430351422
 
 
 class YoutubeDL(mod.Module):
-    async def on_load(self):
+    async def on_load(self) -> None:
+        cache_path = Path("cache")
+        cache_path.mkdir(exist_ok=True)
         self.ytdl = await iYTDL.init(
             session=self.bot.http,
             silent=True,
             loop=self.bot.loop,
-            log_group_id=CONFIG.log_channel_id,
+            log_group_id=LOG_CHANNEL_ID,
+            cache_path=str(cache_path),
+            delete_media=True,
         )
 
-    async def on_exit(self):
-        await self.ytdl.close()
+    async def on_exit(self) -> None:
+        await self.ytdl.stop()
 
     @OnInline(r"ytdl (.+)", owner_only=True)
     async def on_inline(self, i_q: InlineQuery):
@@ -102,7 +105,6 @@ class YoutubeDL(mod.Module):
         owner_only=True,
     )
     async def yt_download(self, c_q: CallbackQuery):
-        await c_q.answer()
         data = c_q.matches[0].group
 
         if data("mode") == "gen":
@@ -111,6 +113,7 @@ class YoutubeDL(mod.Module):
         else:
             yt_url = True
             video_link = f"{YT_VID_URL}{data('key')}"
+        print(video_link)
 
         downtype = "video" if data("dl_type") == "v" else "audio"
 
@@ -120,24 +123,19 @@ class YoutubeDL(mod.Module):
 
         await c_q.answer(f"⬇️ Downloading {downtype} - {disp_str}", show_alert=True)
 
-        rnd_id = rnd_key(5)
-
-        await self.ytdl.download(
-            video_link,
-            uid,
-            rnd_id,
-            with_progress=True,
+        if key := await self.ytdl.download(
+            url=video_link,
+            uid=uid,
             downtype=downtype,
             update=c_q,
-        )
-
-        await self.ytdl.upload(
-            client=self.bot.client,
-            rnd_id=rnd_id,
-            downtype=downtype,
-            update=c_q,
-            link=video_link,
-        )
+        ):
+            await self.ytdl.upload(
+                client=self.bot.client,
+                key=key,
+                downtype=downtype,
+                update=c_q,
+                caption_link=video_link,
+            )
 
     @OnCallback(r"^yt_cancel\|(?P<process_id>[\w\.]+)$", owner_only=True)
     async def yt_cancel(self, c_q: CallbackQuery):

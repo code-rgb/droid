@@ -8,11 +8,13 @@ import logging
 from asyncio.futures import Future
 from collections import OrderedDict
 from functools import partial
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
+import pyrogram
 from pyrogram import Client
 from pyrogram.filters import Filter, create
-from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
+from pyrogram.handlers import (CallbackQueryHandler, InlineQueryHandler,
+                               MessageHandler)
 from pyrogram.types import CallbackQuery, InlineQuery, Message
 
 LOG = logging.getLogger("Conversation")
@@ -55,10 +57,50 @@ class Conversation:
         """check for active Conversation"""
         return self.chat_id in self.convo_dict
 
-    async def send(self, *args: Any, del_in: float = 0.0, **kwargs: Any) -> Message:
-        """Send message"""
-        kwargs.pop("chat_id", None)
-        msg = await self.client.send_message(self.chat_id, *args, **kwargs)
+    async def send(
+        self,
+        text: str,
+        parse_mode: Optional[str] = object,
+        entities: List["pyrogram.types.MessageEntity"] = None,
+        disable_web_page_preview: bool = None,
+        disable_notification: bool = None,
+        reply_to_message_id: int = None,
+        schedule_date: int = None,
+        reply_markup: Union[
+            "pyrogram.types.InlineKeyboardMarkup",
+            "pyrogram.types.ReplyKeyboardMarkup",
+            "pyrogram.types.ReplyKeyboardRemove",
+            "pyrogram.types.ForceReply",
+        ] = None,
+        del_in: float = 0.0,
+    ) -> Message:
+        """[summary]
+
+        Args:
+            text (`str`): [description]
+            parse_mode (`Optional[str]`, optional): [description]. Defaults to object.
+            entities (`List[, optional`): [description]. Defaults to None.
+            disable_web_page_preview (bool, optional): [description]. Defaults to None.
+            disable_notification (bool, optional): [description]. Defaults to None.
+            reply_to_message_id (int, optional): [description]. Defaults to None.
+            schedule_date (int, optional): [description]. Defaults to None.
+            reply_markup (Union[, optional): [description]. Defaults to None.
+            del_in (float, optional): [description]. Defaults to 0.0.
+
+        Returns:
+            Message: [description]
+        """
+        msg = await self.client.send_message(
+            self.chat_id,
+            text,
+            parse_mode,
+            entities,
+            disable_web_page_preview,
+            disable_notification,
+            reply_to_message_id,
+            schedule_date,
+            reply_markup,
+        )
         if isinstance(del_in, (int, float)) and del_in > 0:
             await asyncio.sleep(del_in)
             await msg.delete()
