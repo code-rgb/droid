@@ -87,9 +87,9 @@ idna==3.2; python_version >= "3.8" and python_version < "4" and python_full_vers
     --hash=sha256:467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3
 imagehash==4.2.1 \
     --hash=sha256:a4af957814bc9832d9241247ff03f76e778f890c18147900b4540af124e93011
-iytdl==0.4.1; python_version >= "3.8" and python_version < "4" \
-    --hash=sha256:89c71a154e3d11cfeff821b6bce8f0c526a933c85dc6584e946489688afbff3a \
-    --hash=sha256:10291e49cd903613742a69441db5fe79976ccb1f0858994f4ec6b9e90b8bbee6
+iytdl==0.4.2; python_version >= "3.8" and python_version < "4" \
+    --hash=sha256:72ca767db0ee4b4b5f6d17d782a2fd0e5e2f96ff4e9f6ddbda73503e868f16be \
+    --hash=sha256:f79b2388687eef282767ab6843f2692cb3eb79aa52c590361f55785b583aff68
 lxml==4.6.3; python_version >= "3.8" and python_full_version < "3.0.0" and python_version < "4" or python_version >= "3.8" and python_version < "4" and python_full_version >= "3.5.0" \
     --hash=sha256:df7c53783a46febb0e70f6b05df2ba104610f2fb0d27023409734a3ecbb78fb2 \
     --hash=sha256:1b7584d421d254ab86d4f0b13ec662a9014397678a7c4265a02a6d7c2b18a75f \

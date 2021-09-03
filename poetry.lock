@@ -320,7 +320,7 @@ plugins = ["setuptools"]
 
 [[package]]
 name = "iytdl"
-version = "0.4.1"
+version = "0.4.2"
 description = "Aysnc Inline YouTube-DL for Pyrogram"
 category = "main"
 optional = false
@@ -954,8 +954,8 @@ isort = [
     {file = "isort-5.9.3.tar.gz", hash = "sha256:9c2ea1e62d871267b78307fe511c0838ba0da28698c5732d54e2790bf3ba9899"},
 ]
 iytdl = [
-    {file = "iytdl-0.4.1-py3-none-any.whl", hash = "sha256:89c71a154e3d11cfeff821b6bce8f0c526a933c85dc6584e946489688afbff3a"},
-    {file = "iytdl-0.4.1.tar.gz", hash = "sha256:10291e49cd903613742a69441db5fe79976ccb1f0858994f4ec6b9e90b8bbee6"},
+    {file = "iytdl-0.4.2-py3-none-any.whl", hash = "sha256:72ca767db0ee4b4b5f6d17d782a2fd0e5e2f96ff4e9f6ddbda73503e868f16be"},
+    {file = "iytdl-0.4.2.tar.gz", hash = "sha256:f79b2388687eef282767ab6843f2692cb3eb79aa52c590361f55785b583aff68"},
 ]
 lxml = [
     {file = "lxml-4.6.3-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:df7c53783a46febb0e70f6b05df2ba104610f2fb0d27023409734a3ecbb78fb2"},
