@@ -9,17 +9,15 @@ python = ">=3.8,<4"
 aiorun = "^2021.8.1"
 uvloop = {version = "^0.16.0", platform = "linux"}
 ujson = "^4.1.0"
-Pyrogram = "^1.2.9"
 TgCrypto = "^1.2.2"
 python-dotenv = "^0.19.0"
-ImageHash = "^4.2.1"
 Pillow = "^8.3.1"
 PyYAML = "^5.4.1"
 meval = "^2.5"
 aiohttp = "^3.7.4"
-pyinstaller = "^4.5.1"
 iytdl = "^0.4.1"
-altgraph = "^0.17"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.17.7"}
+pyrogram = {git = "https://github.com/pyrogram/pyrogram.git"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
