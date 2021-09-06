@@ -1,7 +1,8 @@
-from pyrogram import Client
 import asyncio
 from os import getenv
 from pathlib import Path
+
+from pyrogram import Client
 
 ENV = Path("config.env")
 if ENV.is_file():
