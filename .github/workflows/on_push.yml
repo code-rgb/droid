@@ -34,7 +34,7 @@ jobs:
                   poetry run isort .
                   poetry run black .
             - name: Export requirements
-              run: poetry export --without-hashes -f requirements.txt > requirements.txt
+              run: poetry export --without-hashes -f requirements.txt --output requirements.txt
             - uses: stefanzweifel/git-auto-commit-action@v4
               with:
                   commit_message: "on push: auto commit"
