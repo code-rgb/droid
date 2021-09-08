@@ -5,7 +5,7 @@ from typing import Optional
 
 from pyrogram import Client
 from pyrogram.types import User
-
+import sys
 from ..config import CONFIG
 
 
@@ -53,7 +53,10 @@ class PyroBot(ABC):
             self.log.info(f"Stop signal received ('{signals[signum]}').")
             self._is_running = False
 
-        for name in (signal.SIGINT, signal.SIGTERM, signal.SIGABRT, signal.SIGBREAK):
+        _SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGABRT]
+        if sys.platform == "win32":
+            _SIGNALS.append(signal.SIGBREAK)
+        for name in _SIGNALS:
             signal.signal(name, signal_handler)
 
         self._is_running = True
