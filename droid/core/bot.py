@@ -2,7 +2,7 @@ import asyncio
 import logging
 import time
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from .http import Http
 from .loader import Loader
@@ -44,7 +44,9 @@ class Bot(Http, PyroBot, Loader):
         self.loop.stop()
 
     @classmethod
-    async def begin(cls, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> "Bot":
+    async def begin(
+        cls, *, loop: Union[asyncio.AbstractEventLoop, asyncio.SelectorEventLoop] = None
+    ) -> "Bot":
         bot = None
 
         if loop:

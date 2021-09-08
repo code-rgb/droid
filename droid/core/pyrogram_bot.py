@@ -26,15 +26,20 @@ class PyroBot(ABC):
         if string_session := client_config.pop("string_session", None):
             self.userbot = Client(session_name=string_session, **client_config)
         self.client = Client(session_name="droid", **client_config)
-        await self.client.start()
-        self.bot_info = await self.client.get_me()
-        if self.userbot:
-            await self.userbot.start()
-            self.user_info = await self.userbot.get_me()
+        await self._init_client(start=True)
         self.log.info("Pyrogram client stated.")
         self.log.info("Loading modules...")
         await self.load_modules()
         await self.register_handlers()
+
+    async def _init_client(self, start: bool = True):
+        if start:
+            await self.client.start()
+        self.bot_info = await self.client.get_me()
+        if self.userbot:
+            if start:
+                await self.userbot.start()
+            self.user_info = await self.userbot.get_me()
 
     async def idle(self) -> None:
         signals = {
@@ -48,7 +53,7 @@ class PyroBot(ABC):
             self.log.info(f"Stop signal received ('{signals[signum]}').")
             self._is_running = False
 
-        for name in (signal.SIGINT, signal.SIGTERM, signal.SIGABRT):
+        for name in (signal.SIGINT, signal.SIGTERM, signal.SIGABRT, signal.SIGBREAK):
             signal.signal(name, signal_handler)
 
         self._is_running = True
