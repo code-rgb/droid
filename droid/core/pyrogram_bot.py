@@ -1,11 +1,12 @@
 import asyncio
 import signal
+import sys
 from abc import ABC, abstractmethod
 from typing import Optional
 
 from pyrogram import Client
 from pyrogram.types import User
-import sys
+
 from ..config import CONFIG
 
 
