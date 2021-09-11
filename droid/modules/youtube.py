@@ -90,7 +90,9 @@ class YoutubeDL(mod.Module):
             return
         await c_q.answer()
         media, buttons = await self.ytdl.listview(match.group("key"))
-        await c_q.edit_message_media(media=media, reply_markup=buttons)
+        await c_q.edit_message_media(
+            media=media, reply_markup=buttons.add(c_q.from_user.id)
+        )
 
     @OnCallback(YT_REGEX["extract_info"])
     async def extract_info(self, c_q: CallbackQuery):
