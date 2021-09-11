@@ -17,7 +17,7 @@ from ..decor import OnCallback, OnInline
 
 class YoutubeDL(mod.Module):
     YT_REGEX: Dict[str, str] = {
-        "inline": r"yt (.+)",
+        "inline": r"ytdl (.+)",
         "next": r"^yt_(back|next)\|(?P<key>[\w-]{5,11})\|(?P<pg>\d+)-(?P<user_id>\d+)$",
         "list_all": r"^yt_listall\|(?P<key>[\w-]{5,11})-(?P<user_id>\d+)$",
         "extract_info": r"^yt_extract_info\|(?P<key>[\w-]{5,11})-(?P<user_id>\d+)$",
