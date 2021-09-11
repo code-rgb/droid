@@ -17,7 +17,7 @@ meval = "^2.5"
 aiohttp = "^3.7.4"
 tortoise-orm = {extras = ["asyncpg"], version = "^0.17.7"}
 pyrogram = {git = "https://github.com/pyrogram/pyrogram.git"}
-iytdl = "^0.5.1"
+iytdl = "^0.5.3"
 
 
 [tool.poetry.dev-dependencies]
