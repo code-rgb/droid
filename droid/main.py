@@ -17,7 +17,7 @@ Session.notice_displayed = True
 def main():
     LOG.info("Starting...")
     if sys.platform == "win32":
-        policy = asyncio.WindowsSelectorEventLoopPolicy()
+        policy = asyncio.WindowsProactorEventLoopPolicy()
     else:
         try:
             import uvloop
