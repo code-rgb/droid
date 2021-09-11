@@ -1,16 +1,18 @@
 from typing import Dict
+
 from iytdl import Process, iYTDL
 from iytdl.constants import YT_VID_URL
-from iytdl.exceptions import NoResultFoundError, DownloadFailedError
+from iytdl.exceptions import DownloadFailedError, NoResultFoundError
 from pyrogram.types import (
     CallbackQuery,
     InlineQuery,
     InlineQueryResultPhoto,
     InputMediaPhoto,
 )
+
 from .. import mod
-from ..decor import OnCallback, OnInline
 from ..config import CONFIG
+from ..decor import OnCallback, OnInline
 
 
 class YoutubeDL(mod.Module):
