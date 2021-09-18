@@ -1,14 +1,15 @@
-from asyncio import tasks
+import asyncio
 import logging
+
+from pyrogram import filters
 from pyrogram.types.messages_and_media.message import Message
+
 from .. import mod
+from ..config import CONFIG
 from ..core.command_context import Ctx
+from ..core.conversation import Conversation
 from ..decor import OnCmd
 from ..utils import run_command
-from ..core.conversation import Conversation
-from pyrogram import filters
-from ..config import CONFIG
-import asyncio
 
 
 class Term(mod.Module):

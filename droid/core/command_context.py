@@ -1,11 +1,13 @@
 import asyncio
+import os
 import re
-from typing import Dict, Optional, Union
 import tempfile
+from typing import Dict, Optional, Union
+
 from pyrogram.errors import MessageAuthorRequired
 from pyrogram.types import Message
+
 from ..config import CONFIG
-import os
 
 FLAGS_RE = re.compile(r"(?:^|\s)-([A-Za-z]{1,10})[=]?([A-Za-z0-9]{1,10})?(?=$|\s)")
 
