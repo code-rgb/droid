@@ -60,9 +60,9 @@ class Term(mod.Module):
                 if out or err:
                     text = f"<code>~$  {msg.text}</code>"
                     if out:
-                        out += f"\n<pre>{out}</pre>"
+                        out += f"\n\n<pre>{out}</pre>"
                     if err:
-                        text += f"\n<b>ERROR:</b> <pre>{err}</pre>"
+                        text += f"\n\n<b>ERROR:</b> <pre>{err}</pre>"
                     await Ctx(msg).reply(
                         text,
                         parse_mode="HTML",
