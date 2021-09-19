@@ -1,4 +1,5 @@
 import asyncio
+import getpass
 import logging
 
 from pyrogram import filters
@@ -10,7 +11,6 @@ from ..core.command_context import Ctx
 from ..core.conversation import Conversation
 from ..decor import OnCmd
 from ..utils import run_command
-import getpass
 
 
 class Term(mod.Module):
