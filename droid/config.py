@@ -48,10 +48,11 @@ class Config:
     string_session: str = get_env("STRING_SESSION")
     max_caption_length: int = 1024
     max_text_length: int = 4096
+    cmd_prefix: str = get_env("CMD_PREFIX", "/")
 
     def __post_init__(self):
-        self.down_path.mkdir(exist_ok=True)
-        Path(self.workdir).mkdir(exist_ok=True)
+        self.down_path.mkdir(exist_ok=True, parents=True)
+        Path(self.workdir).mkdir(exist_ok=True, parents=True)
         for attr in ("owner_id", "sudo_users"):
             getattr(self, attr).extend(
                 filter(

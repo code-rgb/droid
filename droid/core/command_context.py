@@ -2,14 +2,17 @@ import asyncio
 import os
 import re
 import tempfile
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from pyrogram.errors import MessageAuthorRequired
 from pyrogram.types import Message
 
 from ..config import CONFIG
 
-FLAGS_RE = re.compile(r"(?:^|\s)-([A-Za-z]{1,10})[=]?([A-Za-z0-9]{1,10})?(?=$|\s)")
+FLAGS_RE = re.compile(
+    # Valid flags: https://regex101.com/r/nQ0H9S/1
+    r"(?:^|\s)-{1,2}(?P<flag>[A-Za-z_]+)[=]?(?P<value>\w+|\"[\w\s'-]+\"|\'[\w\s\"-]+\')?(?:(?=$)|(?=\s))"
+)
 
 
 class Ctx:
@@ -18,21 +21,56 @@ class Ctx:
 
     @property
     def flags(self) -> Optional[Dict[str, str]]:
+        """Dict of raw flags without any duplicates
+
+        Returns:
+        -------
+            `Optional[Dict[str, str]]`: {"flag": "value"}
+        """
         if self.msg.text:
-            return dict(FLAGS_RE.findall(self.msg.text))
+            return dict(self.flags_raw)
+
+    @property
+    def flags_raw(self) -> Optional[List[Tuple[str, str]]]:
+        """List of tuple of (flag, value)
+
+        Returns:
+        -------
+            `Optional[List[Tuple[str, str]]]`: [("flag", "value")]
+        """
+        if self.msg.text:
+            return FLAGS_RE.findall(self.msg.text)
 
     @property
     def input(self) -> str:
-        return self.filtered[len(f"/{self.msg.command[0]} ") :]
+        """Input str without flags
+
+        Returns:
+        -------
+            `str`
+        """
+        return self.filtered[len(f"{CONFIG.cmd_prefix}{self.msg.command[0]} ") :]
 
     @property
     def input_raw(self) -> str:
+        """Input str with flags
+
+        Returns:
+        -------
+            `str`
+        """
         if self.msg.text:
-            return self.msg.text[len(f"/{self.msg.command[0]} ") :]
+            return self.msg.text[len(f"{CONFIG.cmd_prefix}{self.msg.command[0]} ") :]
 
     @property
     def filtered(self) -> str:
-        return FLAGS_RE.sub(self.msg.text, "") if self.msg.text else ""
+        """Input str with command prefix but without flag
+
+        Returns:
+        -------
+            `str`
+        """
+        return FLAGS_RE.sub("", self.msg.text) if self.msg.text else ""
 
     async def edit(
         self, text: str, *args, del_in: float = 0.0, **kwargs
@@ -54,14 +92,13 @@ class Ctx:
     ) -> Union[bool, Message]:
         if len(text) >= CONFIG.max_text_length:
             with tempfile.NamedTemporaryFile(
-                mode="w", delete=False, suffix=".txt"
+                mode="w", delete=True, suffix=".txt"
             ) as temp:
-                f_name = temp.name
                 temp.write(text)
-            try:
+                temp.seek(0)  # return to start of the file
                 replied = await self.msg._client.send_document(
                     chat_id=self.msg.chat.id,
-                    document=f_name,
+                    document=temp.name,
                     thumb=None,
                     caption="<code>Output</code>",
                     parse_mode="HTML",
@@ -70,9 +107,6 @@ class Ctx:
                     reply_to_message_id=self.msg.message_id if quote else None,
                     reply_markup=None,
                 )
-            finally:
-                if os.path.isfile(f_name):
-                    os.remove(f_name)
 
         else:
             replied = await self.msg.reply_text(text, *args, quote=quote, **kwargs)
