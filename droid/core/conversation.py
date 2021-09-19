@@ -42,7 +42,7 @@ class Conversation:
     ) -> None:
 
         if chat_id in self.convo_dict:
-            raise ConversationAlreadyExists(f"Chat ID => {self.chat_id}")
+            raise ConversationAlreadyExists(f"Chat ID => {chat_id}")
 
         self.client = client
         self.chat_id = chat_id
@@ -171,6 +171,9 @@ class Conversation:
                     f"\n  Handler => {hndlr.__name__}"
                 )
             )
+        finally:
+            if not fut.done():
+                fut.cancel()
 
     async def __register_handler(self, hndlr: Handlers) -> None:
         """Register Conversation handler"""

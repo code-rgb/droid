@@ -26,12 +26,13 @@ class Term(mod.Module):
             await conv.send("🖥  **Terminal is Now Active**")
             while True:
                 if code := await conv.listen(
-                    filters.create(
-                        lambda _, __, m: m.from_user.id == CONFIG.owner_id
-                        and m.text
-                        and not m.text.startswith(CONFIG.cmd_prefix)
-                    ),
-                    timeout=300,
+                    # filters.create(
+                    #     lambda _, __, m: m.from_user.id == CONFIG.owner_id
+                    #     and m.text
+                    #     and not m.text.startswith(CONFIG.cmd_prefix)
+                    # ),
+                    filters.user(CONFIG.owner_id),
+                    timeout=180,
                 ):
                     if code.text.lower().strip() in ("exit", "quit"):
                         async with self.lock:
