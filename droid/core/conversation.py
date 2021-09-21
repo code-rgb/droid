@@ -67,7 +67,7 @@ class Conversation:
         self.timeout = timeout
         self.loop = loop or asyncio.get_running_loop()
         self.lock = asyncio.Lock()
-        self.hndlr_grp = -999
+        self.hndlr_grp = -float("inf")
 
     @property
     def isactive(self) -> bool:
