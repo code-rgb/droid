@@ -18,7 +18,6 @@ from pyrogram.filters import Filter, create
 from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
 from pyrogram.types import CallbackQuery, InlineQuery, Message
 
-
 log = logging.getLogger("Conversation")
 
 
