@@ -18,10 +18,10 @@ from pyrogram.filters import Filter, create
 from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
 from pyrogram.types import CallbackQuery, InlineQuery, Message
 
-# logger
+
 log = logging.getLogger("Conversation")
 
-# Types
+
 Updates = Union[Message, CallbackQuery, InlineQuery]
 Handlers = Union[
     MessageHandler,
@@ -29,14 +29,11 @@ Handlers = Union[
     InlineQueryHandler,
 ]
 
-# Error
-
 
 class ConversationAlreadyExists(Exception):
     pass
 
 
-# Main Class
 class Conversation:
 
     convo_dict: Dict[str, Union[Future, Handlers]] = {}
