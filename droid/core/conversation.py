@@ -1,3 +1,5 @@
+___all__ = ["Conversation", "ConversationAlreadyExists"]
+
 """
 Coversation Utils
 
@@ -16,7 +18,10 @@ from pyrogram.filters import Filter, create
 from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, MessageHandler
 from pyrogram.types import CallbackQuery, InlineQuery, Message
 
-LOG = logging.getLogger("Conversation")
+# logger
+log = logging.getLogger("Conversation")
+
+# Types
 Updates = Union[Message, CallbackQuery, InlineQuery]
 Handlers = Union[
     MessageHandler,
@@ -24,11 +29,12 @@ Handlers = Union[
     InlineQueryHandler,
 ]
 
-
+# Error
 class ConversationAlreadyExists(Exception):
     pass
 
 
+# Main Class
 class Conversation:
 
     convo_dict: Dict[str, Union[Future, Handlers]] = {}
@@ -40,6 +46,19 @@ class Conversation:
         timeout: float = 30.0,
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
+        """Initiate a conversation
+
+        Parameters:
+        ----------
+            - client (`Client`): Pyrogram Client.
+            - chat_id (`int`): Chat ID of the chat to start conversation in.
+            - timeout (`float`, optional): Response wait time. (Defaults to `30.0`)
+            - loop (`Optional[asyncio.AbstractEventLoop]`, optional): Current event loop (Defaults to `None`)
+
+        Raises:
+        ------
+            `ConversationAlreadyExists`: In case of existing conv. in the same chat.
+        """
 
         if chat_id in self.convo_dict:
             raise ConversationAlreadyExists(f"Chat ID => {chat_id}")
@@ -73,33 +92,54 @@ class Conversation:
         ] = None,
         del_in: float = 0.0,
     ) -> Message:
-        """[summary]
+        """Send text messages to the chat with active Conversation.
 
-        Args:
-            text (`str`): [description]
-            parse_mode (`Optional[str]`, optional): [description]. Defaults to object.
-            entities (`List[, optional`): [description]. Defaults to None.
-            disable_web_page_preview (bool, optional): [description]. Defaults to None.
-            disable_notification (bool, optional): [description]. Defaults to None.
-            reply_to_message_id (int, optional): [description]. Defaults to None.
-            schedule_date (int, optional): [description]. Defaults to None.
-            reply_markup (Union[, optional): [description]. Defaults to None.
-            del_in (float, optional): [description]. Defaults to 0.0.
+        Parameters:
+        ----------
+            - text (`str`): Text of the message to be sent.
+            - parse_mode (`Optional[str]`, optional):
+                By default, texts are parsed using both Markdown and HTML styles)
+                You can combine both syntaxes together.
+                Pass "markdown" or "md" to enable Markdown-style parsing only.
+                Pass "html" to enable HTML-style parsing only.
+                Pass None to completely disable style parsing. (Default to `object`)
+            - entities (`List[`, optional):
+                List of special entities that appear in message text, which can be specified instead of *parse_mode*.
+                (Defaults to `None`)
+            - disable_web_page_preview (`bool`, optional): Disables link previews for links in this message.
+                (Defaults to `None`)
+            - disable_notification (`bool`, optional): Sends the message silently.
+                Users will receive a notification with no sound. (Defaults to `None`)
+            - reply_to_message_id (`int`, optional): If the message is a reply, ID of the original message.
+                (Defaults to `None`)
+            - schedule_date (`int`, optional): Date when the message will be automatically sent. Unix time.
+                (Defaults to `None`)
+            - reply_markup (`Union[
+                    "pyrogram.types.InlineKeyboardMarkup",
+                    "pyrogram.types.ReplyKeyboardMarkup",
+                    "pyrogram.types.ReplyKeyboardRemove",
+                    "pyrogram.types.ForceReply"
+                ]`, optional):
+                Additional interface options. An object for an inline keyboard, custom reply keyboard,
+                instructions to remove reply keyboard or to force a reply from the user. (Defaults to `None`)
+            - del_in (`float`, optional): message delete time in sec. (Defaults to `0.0`)
 
         Returns:
-            Message: [description]
+        -------
+            `Message`: ~pyrogram.types.Message
         """
+
         msg = await self.client.send_message(
-            self.chat_id,
-            text,
-            parse_mode,
-            entities,
-            disable_web_page_preview,
-            disable_notification,
-            reply_to_message_id,
-            schedule_date,
-            reply_markup,
+            chat_id=self.chat_id,
+            text=text,
+            parse_mode=parse_mode,
+            entities=entities,
+            disable_web_page_preview=disable_web_page_preview,
+            disable_notification=disable_notification,
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=reply_markup,
         )
+
         if isinstance(del_in, (int, float)) and del_in > 0:
             await asyncio.sleep(del_in)
             await msg.delete()
@@ -110,7 +150,18 @@ class Conversation:
         filters: Optional[Filter] = None,
         timeout: Optional[float] = None,
     ) -> Optional[Message]:
-        """Wait for Message response"""
+        """Wait for Message response
+
+        Parameters:
+        ----------
+            - filters (`Optional[Filter]`, optional): Pass one or more filters to allow only a subset
+                of messages to be passed in your callback function. (Defaults to `None`)
+            - timeout (`Optional[float]`, optional): Response wait time. (Defaults to `self.timeout`)
+
+        Returns:
+        -------
+            `Optional[Message]`: On Success
+        """
         conv_filter = create(
             lambda _, __, m: ((m.chat.id == self.chat_id) and self.isactive)
         )
@@ -127,11 +178,20 @@ class Conversation:
         filters: Optional[Filter] = None,
         timeout: Optional[float] = None,
     ) -> Optional[CallbackQuery]:
-        """Wait for Callback response"""
+        """Wait for Callback response
+
+        Parameters:
+        ----------
+            - filters (`Optional[Filter]`, optional): Pass one or more filters to allow only a subset
+                of messages to be passed in your callback function. (Defaults to `None`)
+            - timeout (`Optional[float]`, optional): Response wait time. (Defaults to `None`)
+
+        Returns:
+        -------
+            `Optional[CallbackQuery]`: On Success
+        """
         conv_filter = create(
-            lambda _, __, cb: (
-                True if not cb.message else (cb.message.chat.id == self.chat_id)
-            )
+            lambda _, __, cb: (not cb.message or (cb.message.chat.id == self.chat_id))
             and self.isactive
         )
         return await self.__listen(
@@ -145,7 +205,18 @@ class Conversation:
         filters: Optional[Filter] = None,
         timeout: Optional[float] = None,
     ) -> Optional[InlineQuery]:
-        """Wait for Inline response"""
+        """Wait for Inline response
+
+        Parameters:
+        ----------
+            - filters (`Optional[Filter]`, optional): Pass one or more filters to allow only a subset
+                of messages to be passed in your callback function. (Defaults to `None`)
+            - timeout (`Optional[float]`, optional): Response wait time. (Defaults to `None`)
+
+        Returns:
+        -------
+            `Optional[InlineQuery]`: On Success
+        """
         conv_filter = create(lambda _, __, ___: self.isactive)
         return await self.__listen(
             InlineQueryHandler,
@@ -156,6 +227,19 @@ class Conversation:
     async def __listen(
         self, hndlr: Handlers, flt: Filter, timeout: Optional[float]
     ) -> Optional[Updates]:
+        """Listen for handlers
+
+        Parameters:
+        ----------
+            - hndlr (`Handlers`): The handler to be registered.
+            - flt (`Filter`): Pass one or more filters to allow only a subset
+                of messages to be passed in your callback function.
+            - timeout (`Optional[float]`): Response wait time. (Defaults to `self.timeout`)
+
+        Returns:
+        -------
+            `Optional[Updates]`: On Success
+        """
         fut = self.loop.create_future()
         fut.add_done_callback(partial(self.__unregister_handler))
         conv_handler = hndlr(lambda _, u: fut.set_result(u), flt)
@@ -164,7 +248,7 @@ class Conversation:
         try:
             return await asyncio.wait_for(fut, timeout or self.timeout)
         except asyncio.TimeoutError:
-            LOG.error(
+            log.error(
                 (
                     "Ended conversation, 🕐 Timeout reached !"
                     f"\n  Chat ID => {self.chat_id}"
@@ -176,7 +260,12 @@ class Conversation:
                 fut.cancel()
 
     async def __register_handler(self, hndlr: Handlers) -> None:
-        """Register Conversation handler"""
+        """Register Conversation handler
+
+        Parameters:
+        ----------
+            - hndlr (`Handlers`): The handler to be registered.
+        """
         dispatcher = self.client.dispatcher
         async with self.lock:
             if self.hndlr_grp not in dispatcher.groups:
@@ -187,7 +276,7 @@ class Conversation:
     def __unregister_handler(self, *_) -> None:
         """Unregister Conversation handler"""
         if not self.isactive:
-            LOG.warning(f"No active Conversations found in Chat ID => {self.chat_id}")
+            log.warning(f"No active Conversations found in Chat ID => {self.chat_id}")
             return
 
         async def func() -> None:
@@ -195,7 +284,7 @@ class Conversation:
                 dispatcher = self.client.dispatcher
                 async with self.lock:
                     if self.hndlr_grp not in dispatcher.groups:
-                        LOG.warning(
+                        log.warning(
                             f"Group {self.hndlr_grp} does not exist. Handler was not removed."
                         )
                         return
