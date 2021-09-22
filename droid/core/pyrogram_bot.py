@@ -10,6 +10,7 @@ from pyrogram.types import User
 from ..config import CONFIG
 from .clientmod import Droid
 
+
 class PyroBot(ABC):
     # Bot
     client: Client

@@ -1,8 +1,6 @@
 from .. import mod
 from ..core.command_context import Ctx
 from ..decor import OnCmd
-import asyncio
-import json
 
 
 class Ping(mod.Module):
