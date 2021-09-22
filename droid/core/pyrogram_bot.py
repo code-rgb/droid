@@ -8,7 +8,7 @@ from pyrogram import Client
 from pyrogram.types import User
 
 from ..config import CONFIG
-
+from .clientmod import Droid
 
 class PyroBot(ABC):
     # Bot
@@ -25,8 +25,8 @@ class PyroBot(ABC):
     async def init_bot(self):
         client_config = CONFIG._client.copy()
         if string_session := client_config.pop("string_session", None):
-            self.userbot = Client(session_name=string_session, **client_config)
-        self.client = Client(session_name="droid", **client_config)
+            self.userbot = Droid(session_name=string_session, **client_config)
+        self.client = Droid(session_name="droid", **client_config)
         await self._init_client(start=True)
         self.log.info("Pyrogram client stated.")
         self.log.info("Loading modules...")

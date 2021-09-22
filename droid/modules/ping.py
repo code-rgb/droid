@@ -1,12 +1,15 @@
 from .. import mod
 from ..core.command_context import Ctx
 from ..decor import OnCmd
+import asyncio
+import json
 
 
 class Ping(mod.Module):
-    @OnCmd("pingme", admin_only=True)
+    @OnCmd("me", admin_only=True)
     async def on_message(self, ctx: Ctx):
-        await ctx.msg.reply_text("Pong !")
+
+        await ctx.reply(str(await self.bot.client.get_me()))
 
     # @OnCmd("clear_cache", admin_only=True)
     # async def cmd_clear_cache(self, ctx: Ctx):
