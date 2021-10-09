@@ -43,7 +43,8 @@ class Http:
         kwargs["timeout"] = timeout
         try:
             async with self.http.get(url, **kwargs) as resp:
-                assert resp.status == 200
+                if resp.status != 200:
+                    raise ValueError(f"HTTP Status: {resp.status} - URL [{url}]")
                 try:
                     return await resp.json(loads=ujson.loads)
                 except ContentTypeError:
