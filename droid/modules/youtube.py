@@ -16,7 +16,7 @@ from ..decor import OnCallback, OnInline
 
 
 class YoutubeDL(mod.Module):
-    YT_REGEX: Dict[str, str] = {
+    triggers: Dict[str, str] = {
         "inline": r"ytdl (.+)",
         "next": r"^yt_(back|next)\|(?P<key>[\w-]{5,11})\|(?P<pg>\d+)-(?P<user_id>\d+)$",
         "list_all": r"^yt_listall\|(?P<key>[\w-]{5,11})-(?P<user_id>\d+)$",
@@ -38,7 +38,7 @@ class YoutubeDL(mod.Module):
     async def on_exit(self) -> None:
         await self.ytdl.stop()
 
-    @OnInline(YT_REGEX["inline"])
+    @OnInline(triggers["inline"])
     async def on_inline(self, i_q: InlineQuery):
         query = i_q.matches[0].group(1)
         try:
@@ -58,7 +58,7 @@ class YoutubeDL(mod.Module):
             cache_time=1,
         )
 
-    @OnCallback(YT_REGEX["next"])
+    @OnCallback(triggers["next"])
     async def callback_next(self, c_q: CallbackQuery):
         match = c_q.matches[0]
         if c_q.from_user.id not in (int(match.group("user_id")), *CONFIG.owner_id):
@@ -82,7 +82,7 @@ class YoutubeDL(mod.Module):
         else:
             await c_q.answer("That's All Folks !", show_alert=True)
 
-    @OnCallback(YT_REGEX["list_all"])
+    @OnCallback(triggers["list_all"])
     async def callback_listall(self, c_q: CallbackQuery):
         match = c_q.matches[0]
         if c_q.from_user.id not in (int(match.group("user_id")), *CONFIG.owner_id):
@@ -94,7 +94,7 @@ class YoutubeDL(mod.Module):
             media=media, reply_markup=buttons.add(c_q.from_user.id)
         )
 
-    @OnCallback(YT_REGEX["extract_info"])
+    @OnCallback(triggers["extract_info"])
     async def extract_info(self, c_q: CallbackQuery):
         match = c_q.matches[0]
         if c_q.from_user.id not in (int(match.group("user_id")), *CONFIG.owner_id):
@@ -119,7 +119,7 @@ class YoutubeDL(mod.Module):
                     reply_markup=data.buttons.add(c_q.from_user.id),
                 )
 
-    @OnCallback(YT_REGEX["download"])
+    @OnCallback(triggers["download"])
     async def yt_download(self, c_q: CallbackQuery):
         match = c_q.matches[0]
         user_id = int(match.group("user_id"))
@@ -162,7 +162,7 @@ class YoutubeDL(mod.Module):
                 cb_extra=user_id,
             )
 
-    @OnCallback(YT_REGEX["cancel"])
+    @OnCallback(triggers["cancel"])
     async def yt_cancel(self, c_q: CallbackQuery):
         match = c_q.matches[0]
         if c_q.from_user.id not in (int(match.group("user_id")), *CONFIG.owner_id):
