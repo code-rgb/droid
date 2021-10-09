@@ -20,7 +20,7 @@ jobs:
       - name: Check pyproject.toml validity
         run: poetry check --no-interaction
       - name: Installing requirements
-        run: poetry install --no-interaction
+        run: poetry update
       - name: Check for showstoppers
         run: >
           poetry run autopep8 --verbose --in-place --recursive --aggressive --aggressive
