@@ -6,7 +6,7 @@ authors = ["Leorio Paradinight <62891774+code-rgb@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4"
-aiorun = "^2021.8.1"
+aiorun = "^2021.10.1"
 uvloop = {version = "^0.16.0", platform = "linux"}
 ujson = "^4.1.0"
 TgCrypto = "^1.2.2"
